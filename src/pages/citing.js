@@ -1,7 +1,7 @@
 // import { useState, useRef, useEffect } from "react";
 import Base from "./base";
 import NavigationTabs from "./tabs";
-import "../css/wordcloud.css";
+
 import "echarts-wordcloud";
 
 export default function CITING() {

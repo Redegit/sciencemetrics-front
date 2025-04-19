@@ -18,6 +18,7 @@ export default function ORGS() {
         </div>
         <div className="col-sm-12 mt-2 mb-2 g-2 container-chaild-cyrpd">
           <div className="row d-flex justify-content-center">
+            ваши параметры
             <div className="col-sm-12 mt-3 mb-3 g-3 blockrpdVerified">
               ТУТ ORGS
             </div>

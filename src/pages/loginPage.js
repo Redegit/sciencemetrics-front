@@ -5,13 +5,13 @@ import "../css/styles.css";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle login logic here
-    window.location.href = `/cyrpd`;
+    window.location.href = `/wordcloud`;
   };
 
   return (
