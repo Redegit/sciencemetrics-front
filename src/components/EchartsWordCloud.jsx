@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 import "echarts-wordcloud";
 
-const EchartsWordCloud = () => {
+export const EchartsWordCloud = () => {
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -109,5 +109,3 @@ const EchartsWordCloud = () => {
     />
   );
 };
-
-export default EchartsWordCloud;

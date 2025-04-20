@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-// import "../css/navigation.css";
+// import "@css/navigation.css";
 
-export default function Navigation() {
+export const Navigation = () => {
   const [isMenuActive, setIsMenuActive] = useState(false);
 
   const toggleMenu = () => {

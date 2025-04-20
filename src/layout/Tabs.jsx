@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function NavigationTabs() {
+export const NavigationTabs = () => {
   const location = useLocation();
   const pathname = location.pathname;
 

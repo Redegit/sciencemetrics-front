@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Header({ user }) {
+export const Header = ({ user }) => {
   const submitLogoutForm = () => {
     // Handle logout logic here
     // document.getElementById("logoutForm").submit();
@@ -60,9 +60,7 @@ export default function Header({ user }) {
                         <div className="badge-instance">
                           <b className="clayton-santos">Алхажа Омран</b>
                           <b className="line4"></b>
-                          <b className="positionPerson">
-                           ЦРПО
-                          </b>
+                          <b className="positionPerson">ЦРПО</b>
                         </div>
                       </div>
                     </Link>
@@ -164,4 +162,4 @@ export default function Header({ user }) {
       <div className="line"></div>
     </>
   );
-}
+};

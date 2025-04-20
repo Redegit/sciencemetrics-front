@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "../css/login.css";
-import "../css/styles.css";
+import "@css/login.css";
+import "@css/styles.css";
 
-export default function LoginPage() {
+export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error] = useState("");
@@ -90,4 +90,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};

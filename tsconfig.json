@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "src/*"
+      ],
+      "@css/*": [
+        "src/css/*"
+      ]
+    },
+    "noImplicitAny": true,
+    /* Emit */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    /* Completeness */
+    "noImplicitReturns": true,
+    "allowJs": true,
+    "checkJs": false,
+    "incremental": false,
+    "target": "ES2022",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowImportingTsExtensions": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}
