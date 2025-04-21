@@ -1,10 +1,11 @@
-import { DashboardPageWrapper } from "../../hoc/DashboardPageWrapper";
+import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 
 export const MAPS = () => {
   return (
-    <DashboardPageWrapper
-      filtersComponent={"Фильтры"}
-      dashboardComponent={"ТУТ MAPS"}
-    />
+    <>
+      <div className="filters">Фильтры</div>
+
+      <DashboardLayoutContainer>MAPS</DashboardLayoutContainer>
+    </>
   );
-}
+};

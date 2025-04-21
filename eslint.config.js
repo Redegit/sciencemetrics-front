@@ -5,6 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 import jsxA11y from "eslint-plugin-jsx-a11y";
+import eslintPluginImport from "eslint-plugin-import";
 
 export default [
   {
@@ -14,10 +15,9 @@ export default [
         node: {
           extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
         },
-        typescript: {},
-        alias: {
-          map: [["@css", "./src/css"]],
-          extensions: [".js", ".jsx", ".ts", ".tsx"],
+        typescript: {
+          project: "./tsconfig.json",
+          alwaysTryTypes: true,
         },
       },
     },
@@ -47,9 +47,9 @@ export default [
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "jsx-a11y": jsxA11y,
+      import: eslintPluginImport,
     },
     rules: {
-      ...js.configs.recommended.rules,
       ...tseslint.configs.recommended[1].rules,
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
@@ -57,6 +57,9 @@ export default [
         { allowConstantExport: true },
       ],
       "react/no-unknown-property": ["error", { ignore: ["jsx"] }],
+      "import/no-unresolved": "error",
+      "import/named": "error",
+      "import/default": "error",
     },
   },
 
@@ -82,6 +85,7 @@ export default [
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "jsx-a11y": jsxA11y,
+      import: eslintPluginImport,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -95,6 +99,9 @@ export default [
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/no-unknown-property": ["error", { ignore: ["jsx"] }],
+      "import/no-unresolved": "error",
+      "import/named": "error",
+      "import/default": "error",
     },
   },
 ];

@@ -1,10 +1,11 @@
-import { DashboardPageWrapper } from "../../hoc/DashboardPageWrapper";
+import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 
 export const RATING = () => {
   return (
-    <DashboardPageWrapper
-      filtersComponent={"Фильтры"}
-      dashboardComponent={"ТУТ RATING"}
-    />
+    <>
+      <div className="filters">Фильтры</div>
+
+      <DashboardLayoutContainer>RATING</DashboardLayoutContainer>
+    </>
   );
-}
+};

@@ -19,6 +19,7 @@ import {
   Error413,
   LoginPage,
 } from "./pages";
+import { DashboardPageWrapper } from "./hoc/DashboardPageWrapper";
 
 function App() {
   return (
@@ -28,15 +29,17 @@ function App() {
           <Route path="/" element={<LoginPage />} />
 
           <Route element={<BasePageWrapper />}>
-            <Route path="/maps/" element={<MAPS />} />
-            <Route path="/wordcloud/" element={<WORDCLOUD />} />
-            <Route path="/authors/" element={<AUTHORS />} />
-            <Route path="/citing/" element={<CITING />} />
-            <Route path="/orgs/" element={<ORGS />} />
-            <Route path="/rating/" element={<RATING />} />
-            <Route path="/journalvak/" element={<JOURNALVAK />} />
-            <Route path="/articles/" element={<ARTICLES />} />
-            <Route path="/city/" element={<CITY />} />
+            <Route element={<DashboardPageWrapper />}>
+              <Route path="/maps/" element={<MAPS />} />
+              <Route path="/wordcloud/" element={<WORDCLOUD />} />
+              <Route path="/authors/" element={<AUTHORS />} />
+              <Route path="/citing/" element={<CITING />} />
+              <Route path="/orgs/" element={<ORGS />} />
+              <Route path="/rating/" element={<RATING />} />
+              <Route path="/journalvak/" element={<JOURNALVAK />} />
+              <Route path="/articles/" element={<ARTICLES />} />
+              <Route path="/city/" element={<CITY />} />
+            </Route>
 
             <Route path="/error403/" element={<Error403 />} />
             <Route path="/error404/" element={<Error404 />} />

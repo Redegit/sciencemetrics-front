@@ -1,14 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "*": [
-        "src/*"
-      ],
-      "@css/*": [
-        "src/css/*"
-      ]
-    },
+    "baseUrl": ".",
     "noImplicitAny": true,
     /* Emit */
     "esModuleInterop": true,
