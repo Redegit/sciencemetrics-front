@@ -12,7 +12,7 @@ export const Error403 = () => {
               Кажется, у вас нет разрешения на просмотр этой страницы
             </p>
             <Link to="/rpd" className="btn-home">
-              Венуться назад
+              Вернуться назад
             </Link>
           </div>
           <div className="police-tape police-tape--1">

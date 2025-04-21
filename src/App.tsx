@@ -21,8 +21,6 @@ import {
 } from "./pages";
 
 function App() {
-  console.log("qwe");
-
   return (
     <div className="App">
       <BrowserRouter>
