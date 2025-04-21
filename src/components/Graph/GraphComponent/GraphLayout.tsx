@@ -3,6 +3,7 @@ import ReactECharts from "echarts-for-react";
 import { GraphData, GraphLink, GraphNode } from "../../../types";
 import { getColorOnGradient } from "../../../utils/getColorOnGradient";
 import { graphNodeGradients } from "../../../constants/graphNodeGradients";
+import styles from "./GraphLayout.module.css";
 
 export const GraphLayout = ({
   nodes,
@@ -122,7 +123,7 @@ export const GraphLayout = ({
   }, []);
 
   return (
-    <div className="graph-container">
+    <div className={styles.graphContainer}>
       <ReactECharts
         ref={chartRef}
         option={option}

@@ -16,6 +16,7 @@ import {
   FiltersForm,
   InputFilterItem,
 } from "../../../types";
+import styles from "./Filters.module.css";
 
 type Props<T extends FilterConfig> = {
   filterItems: FilterItem<T>[];
@@ -34,8 +35,8 @@ export const Filters = React.memo(
     handleSubmit,
   }: Props<T>) => {
     return (
-      <Form onSubmit={handleSubmit(onSubmit)} className="filters">
-        <Stack gap={3} className="mb-4 text-lg-start">
+      <Form onSubmit={handleSubmit(onSubmit)} className={styles.filters}>
+        <Stack className={styles.filters__list}>
           {filterItems.map((filter) => (
             <Form.Group key={filter.name}>
               <Form.Label>{filter.label}</Form.Label>
@@ -92,7 +93,7 @@ export const Filters = React.memo(
           ))}
         </Stack>
 
-        <ButtonGroup>
+        <ButtonGroup className="filters__buttons">
           <Button variant="outline-secondary" onClick={onReset} type="button">
             Сбросить
           </Button>
