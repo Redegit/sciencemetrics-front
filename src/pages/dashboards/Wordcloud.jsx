@@ -1,3 +1,4 @@
+import { EchartsWordCloud } from "../../components/EchartsWordCloud";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 
 export const WORDCLOUD = () => {
@@ -5,7 +6,9 @@ export const WORDCLOUD = () => {
     <>
       <div className="filters">Фильтры</div>
 
-      <DashboardLayoutContainer>WORDCLOUD</DashboardLayoutContainer>
+      <DashboardLayoutContainer>
+        <EchartsWordCloud />
+      </DashboardLayoutContainer>
     </>
   );
 };
