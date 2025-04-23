@@ -1,4 +1,4 @@
-import React, { JSX, useCallback, useState } from "react";
+import React, { JSX, useCallback, useEffect, useState } from "react";
 import type {
   Control,
   UseFormHandleSubmit,
@@ -14,7 +14,7 @@ import {
 } from "../../types";
 import { Filters } from "./GraphFilters/Filters";
 import { GraphLayout } from "./GraphComponent/GraphLayout";
-import { GraphPlaceholders } from "./GraphComponent/GraphPlaceholders";
+import { GraphPlaceholder } from "./GraphComponent/GraphPlaceholder";
 import { WarningModal } from "./GraphComponent/WarningModal";
 import { transformGraphApiData } from "../../utils/transformGraphApiData";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
@@ -27,6 +27,9 @@ type Props<T extends FilterConfig> = {
   handleSubmit: UseFormHandleSubmit<FiltersForm<T>, FiltersForm<T>>;
 };
 
+export type GraphStatus = "loading" | "error" | "success" | "filtersEmpty";
+export type ErrorMessage = string | null;
+
 export const Graph = React.memo(
   <T extends FilterConfig>({
     graphName,
@@ -36,34 +39,39 @@ export const Graph = React.memo(
     handleSubmit,
   }: Props<T>) => {
     const [graphData, setGraphData] = useState<GraphData | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-    const [filtersEmpty, setFiltersEmpty] = useState<boolean>(true);
     const [filtersKey, setFiltersKey] = useState(0);
     const [showWarningModal, setShowWarningModal] = useState(false);
+
+    const [status, setStatus] = useState<GraphStatus>("filtersEmpty");
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage>(null);
+
     const [pendingGraphData, setPendingGraphData] =
       useState<ApiGraphData | null>(null);
 
     const fetchGraphData = useCallback(
       async (filterParams: FiltersForm<T>) => {
         try {
-          setLoading(true);
-          setError(null);
+          setErrorMessage(null);
+          setStatus("loading");
           const apiData = await getGraphData(graphName, filterParams);
           if (apiData.nodes.length > 1000 || apiData.links.length > 3000) {
             setPendingGraphData(apiData);
             setShowWarningModal(true);
-            setLoading(false);
+            return;
+          }
+          if (apiData.nodes.length === 0) {
+            setGraphData(null);
+            setStatus("error");
+            setErrorMessage("Похоже, что по вашим фильтрам ничего не найдено");
             return;
           }
           const graphData = transformGraphApiData(apiData);
           setGraphData(graphData);
-          setError(null);
+          setStatus("success");
         } catch (err) {
           console.error("Ошибка при загрузке данных графа:", err);
-          setError("Не удалось загрузить данные для графа");
-        } finally {
-          setLoading(false);
+          setErrorMessage("Не удалось загрузить данные для графа");
+          setStatus("error");
         }
       },
       [graphName]
@@ -72,6 +80,10 @@ export const Graph = React.memo(
     const applyFilters = useCallback(
       (filters: FiltersForm<T>) => {
         console.log("Применение фильтров:", filters);
+        setStatus("loading");
+        setErrorMessage(null);
+        setGraphData(null);
+
         const hasActiveFilters = Object.values(filters).some((filterValue) =>
           Array.isArray(filterValue)
             ? filterValue.length > 0
@@ -81,20 +93,19 @@ export const Graph = React.memo(
         );
 
         if (hasActiveFilters) {
-          setFiltersEmpty(false);
           fetchGraphData(filters);
         } else {
-          setFiltersEmpty(true);
+          setStatus("filtersEmpty");
           setGraphData(null);
         }
       },
       [fetchGraphData]
     );
+
     const resetStates = useCallback(() => {
-      setLoading(false);
+      setStatus("filtersEmpty");
+      setErrorMessage(null);
       setGraphData(null);
-      setError(null);
-      setFiltersEmpty(true);
     }, []);
 
     const resetFilters = useCallback(() => {
@@ -116,6 +127,13 @@ export const Graph = React.memo(
       [pendingGraphData, resetStates]
     );
 
+    useEffect(() => {
+      if (filters.length === 0) {
+        fetchGraphData({} as FiltersForm<T>);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
       <>
         {filters.length > 0 && (
@@ -130,13 +148,7 @@ export const Graph = React.memo(
         )}
 
         <DashboardLayoutContainer>
-          {filtersEmpty && <GraphPlaceholders.FiltersEmpty />}
-
-          {error && <GraphPlaceholders.Error error={error} />}
-
-          {loading && <GraphPlaceholders.Loading />}
-
-          {graphData && !loading && !error && (
+          {status === "success" && graphData ? (
             <GraphLayout
               nodes={graphData.nodes}
               links={graphData.links}
@@ -144,6 +156,8 @@ export const Graph = React.memo(
               title={graphData.title}
               name={graphData.name}
             />
+          ) : (
+            <GraphPlaceholder status={status} errorMessage={errorMessage} />
           )}
         </DashboardLayoutContainer>
 
