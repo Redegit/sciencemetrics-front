@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../css/login.css";
 import "../css/styles.css";
+import { useAuth } from "../hook/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -8,10 +10,18 @@ export const LoginPage = () => {
   const [error] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const { signAdminIn } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromPage = location.state?.from?.pathname || "/wordcloud";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    window.location.href = `/wordcloud`;
+
+    await signAdminIn("admin");
+    navigate(fromPage, { replace: true });
   };
 
   return (
@@ -35,6 +45,12 @@ export const LoginPage = () => {
               <div className="text-center mb-4">
                 <img src="/assets/logo.svg" alt="Logo" />
               </div>
+
+              {location.state?.from && (
+                <div className="auth-required__message">
+                  Сперва необходимо авторизоваться
+                </div>
+              )}
 
               <div className="form-group">
                 <input

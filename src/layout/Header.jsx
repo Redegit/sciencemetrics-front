@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../hook/useAuth";
 
 export const Header = ({ user }) => {
-  const submitLogoutForm = () => {
+  const { signAdminOut } = useAuth();
+  // const navigate = useNavigate();
+
+  const submitLogoutForm = async () => {
+    await signAdminOut();
+    // navigate("/", { replace: true });
     // Handle logout logic here
     // document.getElementById("logoutForm").submit();
   };

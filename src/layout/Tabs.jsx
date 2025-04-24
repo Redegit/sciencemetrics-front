@@ -64,7 +64,7 @@ export const NavigationTabs = () => {
         <Link to="/authors" className="col-xs-4 linkNavig ">
           <div
             className={`blockNagitInfo ${
-              pathname === "/autors" ? "active" : ""
+              pathname === "/authors" ? "active" : ""
             }`}
           >
             <svg
