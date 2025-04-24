@@ -12,10 +12,15 @@ type Props<T extends FilterConfig> = Omit<
 > & {
   field: ControllerRenderProps<FiltersForm<T>, Path<FiltersForm<T>>>;
   name: string;
+  filter_api_url_search_n_pagination: string;
 };
 
 export const SelectWithPagination = React.memo(
-  <T extends FilterConfig>({ field, ...props }: Props<T>) => {
+  <T extends FilterConfig>({
+    field,
+    filter_api_url_search_n_pagination,
+    ...props
+  }: Props<T>) => {
     const [error, setError] = useState<boolean>(false);
     const loadOptions = async (
       search: string,
@@ -24,7 +29,11 @@ export const SelectWithPagination = React.memo(
     ) => {
       const page = additional.page || 1;
       try {
-        const data = await getFiltersData(props.name, search, page);
+        const data = await getFiltersData(
+          filter_api_url_search_n_pagination,
+          search,
+          page
+        );
         setError(true);
         return {
           options: data.items,

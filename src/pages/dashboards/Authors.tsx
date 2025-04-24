@@ -27,21 +27,25 @@ export const AUTHORS = React.memo(() => {
       name: "authors",
       label: "Фамилия И.О. автора",
       filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/authors",
     },
     {
       name: "organizations",
       label: "Организация",
       filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/organizations",
     },
     {
       name: "keywords",
       label: "Ключевые слова",
       filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/keywords",
     },
     {
       name: "cities",
       label: "Город",
       filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/cities",
     },
   ];
 

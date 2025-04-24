@@ -7,7 +7,8 @@ type ReferencesFilters = {
   authors: "multi-select";
 };
 
-export const CITING = React.memo(() => { // references
+export const CITING = React.memo(() => {
+  // references
   const { control, handleSubmit, reset } = useForm<
     FiltersForm<ReferencesFilters>
   >({
@@ -21,6 +22,7 @@ export const CITING = React.memo(() => { // references
       name: "authors",
       label: "Фамилия И.О. автора",
       filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/authors",
     },
   ];
 

@@ -2,11 +2,11 @@ import { SelectFiltersApi } from "../types";
 import { request } from "./request";
 
 export const getFiltersData = async (
-  filterName: string,
+  url: string,
   query: string,
   page: number
 ): Promise<SelectFiltersApi> => {
-  const url = `graph/filters/${filterName}?q=${query}&page=${page}`;
-  const data = (await request.get(url)) as SelectFiltersApi;
+  const url_with_query = `${url}?q=${query}&page=${page}`;
+  const data = (await request.get(url_with_query)) as SelectFiltersApi;
   return data;
 };

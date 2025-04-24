@@ -61,6 +61,7 @@ export const Filters = React.memo(
                           }
                           styles={filtersBootstrapLikeStyle}
                           field={field}
+                          filter_api_url_search_n_pagination={filter.filter_api_url_search_n_pagination}
                         />
                       );
                     case "input": {

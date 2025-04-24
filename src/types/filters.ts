@@ -19,11 +19,13 @@ export type BaseFilterItem<T extends string> = {
 
 export type SelectFilterItem<T extends string> = BaseFilterItem<T> & {
   filter_type: "select";
+  filter_api_url_search_n_pagination: string;
   options?: SelectOption[];
 };
 
 export type MultiSelectFilterItem<T extends string> = BaseFilterItem<T> & {
   filter_type: "multi-select";
+  filter_api_url_search_n_pagination: string;
   options?: SelectOption[];
 };
 

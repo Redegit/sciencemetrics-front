@@ -23,6 +23,7 @@ export const ORGS = React.memo(() => {
       filter_type: "select",
       name: "keywords",
       label: "Ключевые слова",
+      filter_api_url_search_n_pagination: "/graph/filters/keywords",
     },
     {
       filter_type: "input",
