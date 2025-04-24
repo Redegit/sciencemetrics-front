@@ -39,7 +39,7 @@ export const CITY = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:5001/api/statistics/authors-by-city?min_publications=100"
+          "http://46.8.232.101:5001/api/statistics/authors-by-city?min_publications=100"
         );
         if (!response.ok) throw new Error("Ошибка загрузки данных");
 
@@ -70,7 +70,7 @@ export const CITY = () => {
       setAuthorsLoading(true);
       try {
         const response = await fetch(
-          `http://127.0.0.1:5001/api/authors/by-city?city=${encodeURIComponent(
+          `http://46.8.232.101:5001/api/authors/by-city?city=${encodeURIComponent(
             selectedCity
           )}&limit=10`
         );
