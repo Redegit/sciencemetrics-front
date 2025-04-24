@@ -14,7 +14,7 @@ export const ORGS = React.memo(() => {
   >({
     defaultValues: {
       keywords: [],
-      min_publications: 3,
+      min_publications: "3",
     },
   });
 
