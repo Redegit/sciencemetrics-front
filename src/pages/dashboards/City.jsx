@@ -12,41 +12,34 @@ export const CITY = () => {
   const [authorsLoading, setAuthorsLoading] = useState(false);
   const chartInstance = useRef(null);
 
-  // Функции для правильного склонения слов
   const getPublicationsWord = (count) => {
-    if (count % 100 >= 11 && count % 100 <= 14) return "публикаций";
+    if (count % 10 <= 2) return "публикаций";
     switch (count % 10) {
-      case 1:
-        return "публикация";
+      case 1: return "публикация";
       case 2:
       case 3:
-      case 4:
-        return "публикации";
-      default:
-        return "публикаций";
+      case 4: return "публикации";
+      default: return "публикаций";
     }
   };
 
   const getAuthorsWord = (count) => {
-    if (count % 100 >= 11 && count % 100 <= 14) return "авторов";
+    if (count % 10 <= 2) return "авторов";
     switch (count % 10) {
-      case 1:
-        return "автор";
-      case 2:
-      case 3:
-      case 4:
-        return "автора";
-      default:
-        return "авторов";
+      case 1: return "автор";
+      case 2: 
+      case 3: 
+      case 4: return "автора";
+      default: return "авторов";
     }
   };
 
-  // Загрузка данных по городам
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://46.8.232.101:5001/api/statistics/authors-by-city?min_publications=100"
+          "http://127.0.0.1:5001/api/statistics/authors-by-city?min_publications=100"
         );
         if (!response.ok) throw new Error("Ошибка загрузки данных");
 
@@ -67,7 +60,6 @@ export const CITY = () => {
     fetchData();
   }, []);
 
-  // Загрузка авторов при выборе города
   useEffect(() => {
     if (!selectedCity) {
       setAuthors([]);
@@ -78,12 +70,13 @@ export const CITY = () => {
       setAuthorsLoading(true);
       try {
         const response = await fetch(
-          `http://46.8.232.101:5001/api/authors/by-city?city=${encodeURIComponent(
+          `http://127.0.0.1:5001/api/authors/by-city?city=${encodeURIComponent(
             selectedCity
-          )}`
+          )}&limit=10`
         );
         if (!response.ok) throw new Error("Ошибка загрузки авторов");
-        setAuthors(await response.json());
+        const data = await response.json();
+        setAuthors(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -94,10 +87,9 @@ export const CITY = () => {
     fetchAuthors();
   }, [selectedCity]);
 
-  // Инициализация графика
+  
   useEffect(() => {
-    if (!chartRef.current || loading || error || citiesData.length === 0)
-      return;
+    if (!chartRef.current || loading || error || citiesData.length === 0) return;
 
     if (!chartInstance.current) {
       chartInstance.current = echarts.init(chartRef.current);
@@ -114,14 +106,14 @@ export const CITY = () => {
         formatter: (params) => {
           return `
             <strong>${params.name}</strong><br/>
-            Публикаций: ${params.value}
+            ${params.value} ${getAuthorsWord(params.value)}
           `;
         },
       },
       legend: {
         type: "scroll",
         orient: "vertical",
-        right: 50,
+        right: 70,
         top: 20,
         bottom: 20,
         textStyle: {
@@ -185,10 +177,7 @@ export const CITY = () => {
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="text-center py-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Загрузка...</span>
-          </div>
+        <div className="text-center py-6">
           <p className="mt-2">Загрузка данных...</p>
         </div>
       );
@@ -212,14 +201,14 @@ export const CITY = () => {
 
     return (
       <div className="row g-3">
-        {/* Основная диаграмма */}
+
         <div className="col-lg-8">
-          <div className="card h-100">
-            <div className="card-body p-0">
+          <div className="card h-300">
+            <div className="card-body p-12">
               <div
                 ref={chartRef}
                 style={{
-                  width: "250%",
+                  width: "300%",
                   height: "500px",
                   minHeight: "300px",
                 }}
@@ -228,70 +217,54 @@ export const CITY = () => {
           </div>
         </div>
 
-        {/* Боковая панель с авторами */}
         <div className="col-lg-4">
-          <div className="card h-100">
-            <div className="card-body">
-              <h6 className="card-title d-flex justify-content-between align-items-center mb-3">
+          <div className="card h-300">
+            <div className="card-body d-flex flex-column">
+              <h6 className="card-title d-flex justify-content-between align-items-center mb-4">
                 <span className="fw-bold">
                   {selectedCity || "Выберите город"}
                 </span>
                 {selectedCity && (
                   <span className="text-muted small">
-                    {authors.length} {getAuthorsWord(authors.length)}
+                    ТОП-{authors.length} {getAuthorsWord(authors.length)}
                   </span>
                 )}
               </h6>
 
-              <div
-                className="authors-list-container"
-                style={{
-                  maxHeight: "400px",
-                  overflowY: "auto",
-                  borderTop: "1px solid #eee",
-                  paddingTop: "1rem",
-                  width: "400px",
-                }}
-              >
+              <div className="authors-list-container flex-grow-1" style={{
+                overflowY: "auto",
+                borderTop: "1px solid #eee",
+                paddingTop: "1rem",
+              }}>
                 {authorsLoading ? (
                   <div className="text-center py-3">
-                    <div
-                      className="spinner-border spinner-border-sm text-secondary"
-                      role="status"
-                    ></div>
-                    <p className="mt-2 mb-0 small text-muted">
-                      Загрузка авторов...
-                    </p>
+                    <div className="spinner-border spinner-border-sm text-secondary" role="status" />
+                    <p className="mt-2 mb-0 small text-muted">Загрузка авторов...</p>
                   </div>
                 ) : authors.length > 0 ? (
                   <ul className="list-unstyled mb-0">
                     {authors.map((author, i) => (
-                      <li key={i} className="py-1 d-flex">
-                        <span className="text-muted me-2 small">{i + 1}.</span>
-                        <span className="small">{author}</span>
+                      <li key={i} className="py-2 d-flex justify-content-between align-items-center">
+                        <div className="d-flex align-items-center">
+                          <span className="text-muted me-2 small" style={{ width: "20px" }}>{i + 1}.</span>
+                          <span className="small text-truncate">{author.name}</span>
+                        </div>
+                        <span className="text-muted small ms-2">
+                          {author.publications} {getPublicationsWord(author.publications)}
+                        </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
                   <div className="text-center py-3 text-muted">
-                    {selectedCity ? (
-                      "Авторы не найдены"
-                    ) : (
-                      <>
-                        <i className="bi bi-pie-chart fs-4 opacity-50"></i>
-                        <p className="mt-2 mb-0 small">
-                          Выберите город на диаграмме
-                        </p>
-                      </>
-                    )}
+                    {selectedCity ? "Авторы не найдены" : "Выберите город на диаграмме"}
                   </div>
                 )}
               </div>
 
               {selectedCity && (
-                <div className="mt-3 pt-2 small text-muted border-top">
-                  Всего {selectedCityData?.value}{" "}
-                  {getPublicationsWord(selectedCityData?.value)}
+                <div className="mt-auto pt-2 small text-muted border-top">
+                  Всего {selectedCityData?.value} {getAuthorsWord(selectedCityData?.value)}
                 </div>
               )}
             </div>
@@ -302,20 +275,16 @@ export const CITY = () => {
   };
 
   return (
-    <>
-      <div className="filters">Фильтры</div>
-
-      <DashboardLayoutContainer>
-        <div className="dashboard-content">
-          <div className="text-center mb-3">
-            <h3 className="fw-light">Распределение публикаций по городам</h3>
-            <p className="text-muted small">
-              Нажмите на сегмент диаграммы для просмотра авторов
-            </p>
-          </div>
-          {renderContent()}
+    <DashboardLayoutContainer>
+      <div className="dashboard-content">
+        <div className="text-center mb-3">
+          <h3 className="fw-light">Распределение авторов по городам</h3>
+          <p className="text-muted small">
+            Нажмите на сегмент диаграммы для просмотра топ-10 авторов
+          </p>
         </div>
-      </DashboardLayoutContainer>
-    </>
+        {renderContent()}
+      </div>
+    </DashboardLayoutContainer>
   );
 };

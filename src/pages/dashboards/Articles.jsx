@@ -8,7 +8,6 @@ export const ARTICLES = () => {
   const [error, setError] = useState(null);
   const chartRef = useRef(null);
 
-  // Функция для правильного склонения слова "статья"
   const declinateArticles = (count) => {
     if (count % 100 >= 11 && count % 100 <= 19) {
       return "статей";
@@ -111,9 +110,6 @@ export const ARTICLES = () => {
     if (isLoading) {
       return (
         <div className="text-center py-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Загрузка...</span>
-          </div>
           <p className="mt-2">Загрузка данных...</p>
         </div>
       );
@@ -137,7 +133,7 @@ export const ARTICLES = () => {
       <div
         ref={chartRef}
         style={{
-          width: "300%",
+          width: "450%",
           height: "500px",
           minHeight: "300px",
         }}
@@ -147,8 +143,6 @@ export const ARTICLES = () => {
 
   return (
     <>
-      <div className="filters">Фильтры</div>
-
       <DashboardLayoutContainer>
         <div className="dashboard-content">
           <div className="text-center mb-4">
