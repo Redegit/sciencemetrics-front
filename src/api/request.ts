@@ -1,5 +1,5 @@
-const baseUrl = "http://46.8.232.101:5001/api/";
-// const baseUrl = "http://localhost:5001/api/";
+// const baseUrl = "http://46.8.232.101:5001/api/";
+const baseUrl = "http://localhost:5001/api/";
 
 const truncateUrl = (url: string) => {
   if (url.startsWith("/")) {

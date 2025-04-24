@@ -1,6 +1,6 @@
 import React from "react";
 import { ErrorMessage, GraphStatus } from "../Graph";
-import styles from "./GraphLayout.module.css";
+import styles from "./GraphComponent.module.css";
 
 const Placeholders = {
   FiltersEmpty: () => (

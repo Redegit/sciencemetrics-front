@@ -3,7 +3,8 @@ import ReactECharts from "echarts-for-react";
 import { GraphData, GraphLink, GraphNode } from "../../../types";
 import { getColorOnGradient } from "../../../utils/getColorOnGradient";
 import { graphNodeGradients } from "../../../constants/graphNodeGradients";
-import styles from "./GraphLayout.module.css";
+import styles from "./GraphComponent.module.css";
+import { GraphZoomControls } from "./GraphZoomControls";
 
 export const GraphLayout = ({
   nodes,
@@ -34,13 +35,17 @@ export const GraphLayout = ({
       formatter: function (params: echarts.ECElementEvent) {
         if (params.dataType === "node") {
           const nodeData = params.data as GraphNode;
-          return `${params.name}<br/>Количество публикаций: ${
-            params.value || "Нет данных"
-          }<br/>` + `${
-            nodeData.aliases.length > 0
-              ? `Алиасы:<br/> ${nodeData.aliases.join("<br/>")}<br/>`
-              : ""
-          }` + `ID: ${nodeData.id}`;
+          return (
+            `${params.name}<br/>Количество публикаций: ${
+              params.value || "Нет данных"
+            }<br/>` +
+            `${
+              nodeData.aliases.length > 0
+                ? `Алиасы:<br/> ${nodeData.aliases.join("<br/>")}<br/>`
+                : ""
+            }` +
+            `ID: ${nodeData.id}`
+          );
         } else if (params.dataType === "edge") {
           const edgeData = params.data as GraphLink;
           return `${params.name}<br/>${edgeData.weight} публикаций`;
@@ -60,6 +65,10 @@ export const GraphLayout = ({
         : undefined,
     toolbox: {
       show: true,
+      feature: {
+        restore: {},
+        saveAsImage: {},
+      },
     },
     series: [
       {
@@ -84,7 +93,8 @@ export const GraphLayout = ({
           formatter: (params: { data: { name: string } }) => params.data.name,
         },
         force: {
-          repulsion: 100,
+          repulsion: 20,
+          gravity: 0.2,
           edgeLength: 50,
         },
         lineStyle: {
@@ -124,6 +134,7 @@ export const GraphLayout = ({
 
   return (
     <div className={styles.graphContainer}>
+      <GraphZoomControls chartRef={chartRef} />
       <ReactECharts
         ref={chartRef}
         option={option}
