@@ -38,7 +38,14 @@ export const Filters = React.memo(
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.filters}>
         <Stack className={styles.filters__list}>
           {filterItems.map((filter) => (
-            <Form.Group key={filter.name}>
+            <Form.Group
+              key={filter.name}
+              className={styles.filters__item}
+              style={{
+                ["--filter-column" as any]: filter.column,
+                ["--filter-min-width" as any]: filter.minWidth,
+              }}
+            >
               <Form.Label>{filter.label}</Form.Label>
               <Controller
                 name={filter.name as Path<FiltersForm<T>>}
@@ -61,7 +68,9 @@ export const Filters = React.memo(
                           }
                           styles={filtersBootstrapLikeStyle}
                           field={field}
-                          filter_api_url_search_n_pagination={filter.filter_api_url_search_n_pagination}
+                          filter_api_url_search_n_pagination={
+                            filter.filter_api_url_search_n_pagination
+                          }
                         />
                       );
                     case "input": {

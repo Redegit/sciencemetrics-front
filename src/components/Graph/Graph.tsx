@@ -84,12 +84,12 @@ export const Graph = React.memo(
         setErrorMessage(null);
         setGraphData(null);
 
-        const hasActiveFilters = Object.values(filters).some((filterValue) =>
-          Array.isArray(filterValue)
-            ? filterValue.length > 0
-            : filterValue !== undefined &&
-              filterValue !== null &&
-              filterValue !== ""
+        const hasActiveFilters = Object.entries(filters).some(
+          ([key, value]) =>
+            key !== "min_publications" &&
+            (Array.isArray(value)
+              ? value.length > 0
+              : value !== undefined && value !== null && value !== "")
         );
 
         if (hasActiveFilters) {

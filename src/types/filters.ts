@@ -15,6 +15,8 @@ export type SelectOption = {
 export type BaseFilterItem<T extends string> = {
   name: T;
   label: string;
+  column?: number;
+  minWidth?: string;
 };
 
 export type SelectFilterItem<T extends string> = BaseFilterItem<T> & {

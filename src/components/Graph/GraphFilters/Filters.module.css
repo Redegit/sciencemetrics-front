@@ -6,9 +6,16 @@
     align-items: center;
 
     .filters__list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        grid-auto-flow: dense;
+        gap: 1rem;
         width: 100%;
+        align-items: start;
+
+        .filters__item {
+            min-width: var(--filter-min-width, auto);
+            grid-column: var(--filter-column, auto);
+        }
     }
 }

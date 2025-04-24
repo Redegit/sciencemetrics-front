@@ -5,7 +5,7 @@ import { Graph } from "../../components/Graph";
 
 type OrganizationFilters = {
   keywords: "select";
-  min_common_publications: "input";
+  min_publications: "input";
 };
 
 export const ORGS = React.memo(() => {
@@ -14,7 +14,7 @@ export const ORGS = React.memo(() => {
   >({
     defaultValues: {
       keywords: [],
-      min_common_publications: 3,
+      min_publications: 3,
     },
   });
 
@@ -26,11 +26,13 @@ export const ORGS = React.memo(() => {
       filter_api_url_search_n_pagination: "/graph/filters/keywords",
     },
     {
+      name: "min_publications",
+      label: "Мин. совместных публикаций",
       filter_type: "input",
       type: "number",
-      name: "min_common_publications",
-      label: "Минимальное количество совместных публикаций",
       min: 1,
+      defaultValue: 3,
+      required: true,
     },
   ];
 

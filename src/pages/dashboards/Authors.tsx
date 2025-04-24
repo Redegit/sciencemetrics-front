@@ -8,6 +8,7 @@ type AuthorsFilters = {
   organizations: "multi-select";
   keywords: "multi-select";
   cities: "multi-select";
+  min_publications: "input";
 };
 
 export const AUTHORS = React.memo(() => {
@@ -18,6 +19,7 @@ export const AUTHORS = React.memo(() => {
         organizations: [],
         keywords: [],
         cities: [],
+        min_publications: "3", // string is used for number input
       },
     }
   );
@@ -28,24 +30,38 @@ export const AUTHORS = React.memo(() => {
       label: "Фамилия И.О. автора",
       filter_type: "multi-select",
       filter_api_url_search_n_pagination: "/graph/filters/authors",
+      column: 1,
     },
     {
       name: "organizations",
       label: "Организация",
       filter_type: "multi-select",
       filter_api_url_search_n_pagination: "/graph/filters/organizations",
+      column: 1,
     },
     {
       name: "keywords",
       label: "Ключевые слова",
       filter_type: "multi-select",
       filter_api_url_search_n_pagination: "/graph/filters/keywords",
+      column: 1,
     },
     {
       name: "cities",
       label: "Город",
       filter_type: "multi-select",
       filter_api_url_search_n_pagination: "/graph/filters/cities",
+      column: 2,
+    },
+    {
+      name: "min_publications",
+      label: "Мин. совместных публикаций",
+      filter_type: "input",
+      type: "number",
+      min: 1,
+      defaultValue: 3,
+      column: 2,
+      required: true,
     },
   ];
 
