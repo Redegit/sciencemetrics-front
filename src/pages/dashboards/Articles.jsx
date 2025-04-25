@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
+import { request } from "../../api/request";
 
 export const ARTICLES = () => {
   const [chartData, setChartData] = useState([]);
@@ -22,13 +23,7 @@ export const ARTICLES = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://46.8.232.101:5001/api/statistics/publications-by-year"
-        );
-
-        if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
-
-        const result = await response.json();
+        const result = await request.get("/statistics/publications-by-year");
 
         if (typeof result !== "object" || result === null) {
           throw new Error("Неверный формат данных");

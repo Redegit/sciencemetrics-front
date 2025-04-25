@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import * as echarts from 'echarts';
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
+import { createUrl } from '../../api/request';
 
 const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
     const chartRef = useRef(null);
@@ -155,8 +156,8 @@ export const RATING = () => {
         const fetchInitialData = async () => {
             try {
                 const [orgsResponse, keywordsResponse] = await Promise.all([
-                    fetch('http://127.0.0.1:5001/api/statistics/rating/organizations'),
-                    fetch('http://127.0.0.1:5001/api/statistics/rating/keywords')
+                    fetch(createUrl('/statistics/rating/organizations')),
+                    fetch(createUrl('/statistics/rating/keywords'))
                 ]);
 
                 const [orgsData, keywordsData] = await Promise.all([
@@ -186,8 +187,8 @@ export const RATING = () => {
 
             try {
                 const [orgsResponse, keywordsResponse] = await Promise.all([
-                    fetch(`http://127.0.0.1:5001/api/statistics/rating/organizations-by-keyword?keyword=${encodeURIComponent(selectedKeyword)}`),
-                    fetch(`http://127.0.0.1:5001/api/statistics/rating/keywords-by-organization?organization=${encodeURIComponent(selectedOrganization)}`)
+                    fetch(createUrl(`/statistics/rating/organizations-by-keyword?keyword=${encodeURIComponent(selectedKeyword)}`)),
+                    fetch(createUrl(`/statistics/rating/keywords-by-organization?organization=${encodeURIComponent(selectedOrganization)}`))
                 ]);
 
                 const [orgsData, keywordsData] = await Promise.all([

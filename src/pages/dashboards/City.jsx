@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as echarts from "echarts";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
+import { request } from "../../api/request";
 
 export const CITY = () => {
   const chartRef = useRef(null);
@@ -15,35 +16,37 @@ export const CITY = () => {
   const getPublicationsWord = (count) => {
     if (count % 10 <= 2) return "публикаций";
     switch (count % 10) {
-      case 1: return "публикация";
+      case 1:
+        return "публикация";
       case 2:
       case 3:
-      case 4: return "публикации";
-      default: return "публикаций";
+      case 4:
+        return "публикации";
+      default:
+        return "публикаций";
     }
   };
 
   const getAuthorsWord = (count) => {
     if (count % 10 <= 2) return "авторов";
     switch (count % 10) {
-      case 1: return "автор";
-      case 2: 
-      case 3: 
-      case 4: return "автора";
-      default: return "авторов";
+      case 1:
+        return "автор";
+      case 2:
+      case 3:
+      case 4:
+        return "автора";
+      default:
+        return "авторов";
     }
   };
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://46.8.232.101:5001/api/statistics/authors-by-city?min_publications=100"
+        const data = await request.get(
+          "/statistics/authors-by-city?min_publications=100"
         );
-        if (!response.ok) throw new Error("Ошибка загрузки данных");
-
-        const data = await response.json();
         setCitiesData(
           data.map((item) => ({
             name: item[0],
@@ -69,13 +72,9 @@ export const CITY = () => {
     const fetchAuthors = async () => {
       setAuthorsLoading(true);
       try {
-        const response = await fetch(
-          `http://46.8.232.101:5001/api/authors/by-city?city=${encodeURIComponent(
-            selectedCity
-          )}&limit=10`
+        const data = await request.get(
+          `/authors/by-city?city=${encodeURIComponent(selectedCity)}&limit=10`
         );
-        if (!response.ok) throw new Error("Ошибка загрузки авторов");
-        const data = await response.json();
         setAuthors(data);
       } catch (err) {
         setError(err.message);
@@ -87,9 +86,9 @@ export const CITY = () => {
     fetchAuthors();
   }, [selectedCity]);
 
-  
   useEffect(() => {
-    if (!chartRef.current || loading || error || citiesData.length === 0) return;
+    if (!chartRef.current || loading || error || citiesData.length === 0)
+      return;
 
     if (!chartInstance.current) {
       chartInstance.current = echarts.init(chartRef.current);
@@ -201,7 +200,6 @@ export const CITY = () => {
 
     return (
       <div className="row g-3">
-
         <div className="col-lg-8">
           <div className="card h-300">
             <div className="card-body p-12">
@@ -231,40 +229,62 @@ export const CITY = () => {
                 )}
               </h6>
 
-              <div className="authors-list-container flex-grow-1" style={{
-                overflowY: "auto",
-                borderTop: "1px solid #eee",
-                paddingTop: "1rem",
-              }}>
+              <div
+                className="authors-list-container flex-grow-1"
+                style={{
+                  overflowY: "auto",
+                  borderTop: "1px solid #eee",
+                  paddingTop: "1rem",
+                }}
+              >
                 {authorsLoading ? (
                   <div className="text-center py-3">
-                    <div className="spinner-border spinner-border-sm text-secondary" role="status" />
-                    <p className="mt-2 mb-0 small text-muted">Загрузка авторов...</p>
+                    <div
+                      className="spinner-border spinner-border-sm text-secondary"
+                      role="status"
+                    />
+                    <p className="mt-2 mb-0 small text-muted">
+                      Загрузка авторов...
+                    </p>
                   </div>
                 ) : authors.length > 0 ? (
                   <ul className="list-unstyled mb-0">
                     {authors.map((author, i) => (
-                      <li key={i} className="py-2 d-flex justify-content-between align-items-center">
+                      <li
+                        key={i}
+                        className="py-2 d-flex justify-content-between align-items-center"
+                      >
                         <div className="d-flex align-items-center">
-                          <span className="text-muted me-2 small" style={{ width: "20px" }}>{i + 1}.</span>
-                          <span className="small text-truncate">{author.name}</span>
+                          <span
+                            className="text-muted me-2 small"
+                            style={{ width: "20px" }}
+                          >
+                            {i + 1}.
+                          </span>
+                          <span className="small text-truncate">
+                            {author.name}
+                          </span>
                         </div>
                         <span className="text-muted small ms-2">
-                          {author.publications} {getPublicationsWord(author.publications)}
+                          {author.publications}{" "}
+                          {getPublicationsWord(author.publications)}
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
                   <div className="text-center py-3 text-muted">
-                    {selectedCity ? "Авторы не найдены" : "Выберите город на диаграмме"}
+                    {selectedCity
+                      ? "Авторы не найдены"
+                      : "Выберите город на диаграмме"}
                   </div>
                 )}
               </div>
 
               {selectedCity && (
                 <div className="mt-auto pt-2 small text-muted border-top">
-                  Всего {selectedCityData?.value} {getAuthorsWord(selectedCityData?.value)}
+                  Всего {selectedCityData?.value}{" "}
+                  {getAuthorsWord(selectedCityData?.value)}
                 </div>
               )}
             </div>
