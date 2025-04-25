@@ -8,7 +8,7 @@ const getNodeSize = (scale: number) => {
 };
 
 export const transformGraphApiData = (apiData: ApiGraphData) => {
-  const values = apiData.nodes.map((n) => n.value);
+  const values = apiData.nodes.map((n) => n.value | 1);
   const min = Math.min(...values);
   const max = Math.max(...values);
   const logMin = Math.log(min);
@@ -20,7 +20,7 @@ export const transformGraphApiData = (apiData: ApiGraphData) => {
     if (maxDiff === 0) {
       return 1;
     } else {
-      return (Math.log(value) - logMin) / (logMax - logMin);
+      return (Math.log(value | 1) - logMin) / (logMax - logMin);
     }
   };
 

@@ -11,6 +11,7 @@ import {
   FilterItem,
   FiltersForm,
   GraphData,
+  GraphOptions,
 } from "../../types";
 import { Filters } from "./GraphFilters/Filters";
 import { GraphLayout } from "./GraphComponent/GraphLayout";
@@ -25,6 +26,7 @@ type Props<T extends FilterConfig> = {
   control: Control<FiltersForm<T>>;
   reset: UseFormReset<FiltersForm<T>>;
   handleSubmit: UseFormHandleSubmit<FiltersForm<T>, FiltersForm<T>>;
+  options?: GraphOptions;
 };
 
 export type GraphStatus = "loading" | "error" | "success" | "filtersEmpty";
@@ -37,6 +39,7 @@ export const Graph = React.memo(
     control,
     reset,
     handleSubmit,
+    options,
   }: Props<T>) => {
     const [graphData, setGraphData] = useState<GraphData | null>(null);
     const [filtersKey, setFiltersKey] = useState(0);
@@ -149,13 +152,7 @@ export const Graph = React.memo(
 
         <DashboardLayoutContainer>
           {status === "success" && graphData ? (
-            <GraphLayout
-              nodes={graphData.nodes}
-              links={graphData.links}
-              categories={graphData.categories}
-              title={graphData.title}
-              name={graphData.name}
-            />
+            <GraphLayout graphData={graphData} options={options} />
           ) : (
             <GraphPlaceholder status={status} errorMessage={errorMessage} />
           )}

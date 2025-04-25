@@ -30,6 +30,7 @@ export const CITING = React.memo(() => {
     <Graph
       graphName="references"
       {...{ control, handleSubmit, reset, filters }}
+      options={{ edgeSymbol: ["circle", "arrow"] }}
     />
   );
 });

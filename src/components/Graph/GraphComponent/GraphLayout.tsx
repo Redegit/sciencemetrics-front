@@ -1,19 +1,21 @@
 import { useEffect, useRef } from "react";
 import ReactECharts from "echarts-for-react";
-import { GraphData, GraphLink, GraphNode } from "../../../types";
+import { GraphData, GraphLink, GraphNode, GraphOptions } from "../../../types";
 import { getColorOnGradient } from "../../../utils/getColorOnGradient";
 import { graphNodeGradients } from "../../../constants/graphNodeGradients";
 import styles from "./GraphComponent.module.css";
 import { GraphZoomControls } from "./GraphZoomControls";
+import React from "react";
 
-export const GraphLayout = ({
-  nodes,
-  links,
-  categories,
-  title,
-  name,
-}: GraphData) => {
+type Props = {
+  options?: GraphOptions;
+  graphData: GraphData;
+};
+
+export const GraphLayout = React.memo<Props>(({ graphData, options }) => {
   const chartRef = useRef<ReactECharts>(null);
+
+  const { nodes, links, categories, title, name } = graphData;
 
   const getNodeColor = (node: GraphNode) => {
     const gradient = graphNodeGradients[node.category || 0];
@@ -79,8 +81,10 @@ export const GraphLayout = ({
           ...node,
           itemStyle: {
             color: getNodeColor(node),
+            opacity: 0.9,
           },
         })),
+        edgeSymbol: options?.edgeSymbol,
         links: links,
         categories: categories,
         roam: true,
@@ -143,4 +147,4 @@ export const GraphLayout = ({
       />
     </div>
   );
-};
+});

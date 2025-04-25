@@ -39,6 +39,10 @@ type GraphTitle = {
   subtext: string;
 };
 
+export type GraphOptions = {
+  edgeSymbol?: [string, string];
+};
+
 export type GraphData = {
   nodes: GraphNode[];
   links: GraphLink[];
