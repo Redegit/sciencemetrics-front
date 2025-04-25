@@ -22,12 +22,12 @@ export const ORGS = React.memo(() => {
     {
       filter_type: "select",
       name: "keywords",
-      label: "Ключевые слова",
+      label: "Ключевое слово",
       filter_api_url_search_n_pagination: "/graph/filters/keywords",
     },
     {
       name: "min_publications",
-      label: "Мин. совместных публикаций",
+      label: "Минимум публикаций",
       filter_type: "input",
       type: "number",
       min: 1,
