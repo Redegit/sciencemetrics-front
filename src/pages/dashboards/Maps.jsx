@@ -45,7 +45,7 @@ const OrganizationsPanel = ({ city, organizations, onClose, loading }) => {
 };
 
 export const MAPS = () => {
-  const [zoom, setZoom] = useState(5);
+  const [zoom, setZoom] = useState(3);
   const [citiesData, setCitiesData] = useState([]);
   const [organizationsData, setOrganizationsData] = useState([]);
   const [activeCity, setActiveCity] = useState(null);
