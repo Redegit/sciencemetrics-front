@@ -135,7 +135,7 @@ const Filters = ({
                     onChange={onOrganizationChange}
                 >
                     {organizations.map((org, index) => (
-                        <option key={index} value={org}>{org}</option>
+                        <option key={index} value={org.name}>{org.name}</option>
                     ))}
                 </Form.Control>
             </Form.Group>
@@ -147,6 +147,7 @@ export const RATING = () => {
     const [organizations, setOrganizations] = useState([]);
     const [keywords, setKeywords] = useState([]);
     const [selectedOrganization, setSelectedOrganization] = useState('');
+    const [selectedOrganizationId, setSelectedOrganizationId] = useState('');
     const [selectedKeyword, setSelectedKeyword] = useState('');
     const [topOrganizations, setTopOrganizations] = useState([]);
     const [topKeywords, setTopKeywords] = useState([]);
@@ -160,6 +161,10 @@ export const RATING = () => {
                     fetch(createUrl('/statistics/rating/keywords'))
                 ]);
 
+                if (!orgsResponse.ok || !keywordsResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
                 const [orgsData, keywordsData] = await Promise.all([
                     orgsResponse.json(),
                     keywordsResponse.json()
@@ -168,8 +173,13 @@ export const RATING = () => {
                 setOrganizations(orgsData);
                 setKeywords(keywordsData);
                 
-                if (orgsData.length > 0) setSelectedOrganization(orgsData[0]);
-                if (keywordsData.length > 0) setSelectedKeyword(keywordsData[0]);
+                if (orgsData.length > 0) {
+                    setSelectedOrganization(orgsData[0].name);
+                    setSelectedOrganizationId(orgsData[0].id.toString()); // Преобразуем ID в строку
+                }
+                if (keywordsData.length > 0) {
+                    setSelectedKeyword(keywordsData[0]);
+                }
                 
                 setLoading(false);
             } catch (error) {
@@ -183,31 +193,44 @@ export const RATING = () => {
 
     useEffect(() => {
         const fetchTopData = async () => {
-            if (!selectedKeyword || !selectedOrganization) return;
+            if (!selectedKeyword || !selectedOrganizationId) return;
 
             try {
                 const [orgsResponse, keywordsResponse] = await Promise.all([
                     fetch(createUrl(`/statistics/rating/organizations-by-keyword?keyword=${encodeURIComponent(selectedKeyword)}`)),
-                    fetch(createUrl(`/statistics/rating/keywords-by-organization?organization=${encodeURIComponent(selectedOrganization)}`))
+                    fetch(createUrl(`/statistics/rating/keywords-by-organization?organizationid=${selectedOrganizationId}`))
                 ]);
+
+                if (!orgsResponse.ok || !keywordsResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
                 const [orgsData, keywordsData] = await Promise.all([
                     orgsResponse.json(),
                     keywordsResponse.json()
                 ]);
 
-                setTopOrganizations(orgsData);
-                setTopKeywords(keywordsData);
+                // Преобразуем данные для диаграмм
+                const prepareChartData = (data, nameKey = 'name', countKey = 'count') => {
+                    return data.map(item => [item[nameKey], item[countKey]]);
+                };
+
+                setTopOrganizations(prepareChartData(orgsData, 'name', 'count'));
+                setTopKeywords(prepareChartData(keywordsData, 'keyword', 'count'));
             } catch (error) {
                 console.error('Error loading top data:', error);
             }
         };
 
         fetchTopData();
-    }, [selectedKeyword, selectedOrganization]);
+    }, [selectedKeyword, selectedOrganizationId]);
 
     const handleOrganizationChange = (e) => {
-        setSelectedOrganization(e.target.value);
+        const selectedOrg = organizations.find(org => org.name === e.target.value);
+        if (selectedOrg) {
+            setSelectedOrganization(selectedOrg.name);
+            setSelectedOrganizationId(selectedOrg.id.toString()); // Преобразуем ID в строку
+        }
     };
 
     const handleKeywordChange = (e) => {
@@ -257,7 +280,7 @@ export const RATING = () => {
                 </div>
             </DashboardLayoutContainer>
 
-            <style jsx="true">{`
+            <style jsx>{`
                 .filters {
                     padding: 20px;
                     background: #f8f9fa;

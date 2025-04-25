@@ -45,7 +45,7 @@ export const CITY = () => {
     const fetchData = async () => {
       try {
         const data = await request.get(
-          "/statistics/authors-by-city?min_publications=100"
+          "/statistics/authors-by-city?min_publications=50"
         );
         setCitiesData(
           data.map((item) => ({
