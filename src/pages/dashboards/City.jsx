@@ -73,7 +73,7 @@ export const CITY = () => {
       setAuthorsLoading(true);
       try {
         const data = await request.get(
-          `/authors/by-city?city=${encodeURIComponent(selectedCity)}&limit=10`
+          `/statistics/authors/by-city?city=${encodeURIComponent(selectedCity)}&limit=10`
         );
         setAuthors(data);
       } catch (err) {
