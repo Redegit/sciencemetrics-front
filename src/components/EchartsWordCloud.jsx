@@ -2,48 +2,28 @@ import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 import "echarts-wordcloud";
 
-export const EchartsWordCloud = () => {
+const EchartsWordCloud = ({ data, year }) => {
   const chartRef = useRef(null);
+  const chartInstance = useRef(null);
 
   useEffect(() => {
     // Initialize chart
-    const chart = echarts.init(chartRef.current);
+    chartInstance.current = echarts.init(chartRef.current);
 
-    // Word cloud data
-    const data = [
-      { name: "кибербезопасность", value: 100 },
-      { name: "экономика", value: 80 },
-      { name: "big Data", value: 60 },
-      { name: "цифровая экономика", value: 55 },
-      { name: "маркетплейс", value: 50 },
-      { name: "интернет-продажи", value: 45 },
-      { name: "цифровизация", value: 40 },
-      { name: "risks", value: 35 },
-      { name: "арендатор", value: 30 },
-      { name: "API", value: 25 },
-      { name: "CSS", value: 20 },
-      { name: "хай-тек", value: 15 },
-      { name: "продвинутый ИИ", value: 10 },
-      { name: "риски", value: 65 },
-      { name: "моделирование", value: 40 },
-      { name: "циркулярная экономика", value: 35 },
-      { name: "convolutional neural network (CNN)", value: 30 },
-      { name: "кризис", value: 25 },
-      { name: "фактор риска", value: 20 },
-      { name: "методы антикризисного управления", value: 15 },
-    ];
-
-    // Configuration options
     const options = {
       title: {
-        text: "Отображение количества слов по годам 2024+2025",
+        text: `Отображение популярных терминов за ${year} год (Топ-20)`,
         left: "center",
         top: 20,
+        textStyle: {
+          fontSize: 18,
+          fontWeight: 'bold'
+        }
       },
       tooltip: {
         show: true,
         formatter: (params) => {
-          return `${params.data.name}: ${params.data.value}`;
+          return `${params.data.name}: ${params.data.value} упоминаний`;
         },
       },
       series: [
@@ -54,8 +34,6 @@ export const EchartsWordCloud = () => {
           top: "center",
           width: "90%",
           height: "90%",
-          right: null,
-          bottom: null,
           sizeRange: [12, 60],
           rotationRange: [-45, 45],
           rotationStep: 15,
@@ -64,10 +42,10 @@ export const EchartsWordCloud = () => {
           textStyle: {
             fontFamily: "Arial",
             fontWeight: "bold",
-            color: function () {
-              return `rgb(${Math.round(Math.random() * 160)}, ${Math.round(
-                Math.random() * 160
-              )}, ${Math.round(Math.random() * 160)})`;
+            color: () => {
+              return `rgb(${Math.round(Math.random() * 160)}, 
+                      ${Math.round(Math.random() * 160)}, 
+                      ${Math.round(Math.random() * 160)})`;
             },
           },
           emphasis: {
@@ -82,19 +60,20 @@ export const EchartsWordCloud = () => {
       ],
     };
 
-    // Set options and render chart
-    chart.setOption(options);
+    chartInstance.current.setOption(options);
 
-    // Handle window resize
-    const handleResize = () => chart.resize();
+    const handleResize = () => chartInstance.current?.resize();
     window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
-      chart.dispose();
+      if (chartInstance.current) {
+        chartInstance.current.dispose();
+        chartInstance.current = null;
+      }
     };
-  }, []);
+  }, [data, year]);
 
   return (
     <div
@@ -105,7 +84,10 @@ export const EchartsWordCloud = () => {
         margin: "0 auto",
         borderRadius: "8px",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        backgroundColor: "#fff",
       }}
     />
   );
 };
+
+export default EchartsWordCloud;
