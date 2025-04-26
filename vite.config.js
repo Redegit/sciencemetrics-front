@@ -12,4 +12,7 @@ export default defineConfig({
       scopeBehaviour: "local",
     },
   },
+  define: {
+    __LOCAL__: process.argv.includes("--localhost"),
+  },
 });

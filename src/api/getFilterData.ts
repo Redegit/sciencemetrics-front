@@ -6,7 +6,8 @@ export const getFiltersData = async (
   query: string,
   page: number
 ): Promise<SelectFiltersApi> => {
-  const url_with_query = `${url}?q=${query}&page=${page}`;
+  const url_with_query = `${url}?q=${encodeURIComponent(query)}&page=${page}`;
+
   const data = (await request.get(url_with_query)) as SelectFiltersApi;
   return data;
 };

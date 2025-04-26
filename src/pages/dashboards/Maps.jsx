@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
+import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from '../../api/request';
-import '/src/css/Maps.css';
+import '../../css/Maps.css';
 
 const OrganizationsPanel = ({ city, organizations, onClose, loading }) => {
   const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
