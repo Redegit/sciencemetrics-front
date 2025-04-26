@@ -5,6 +5,7 @@ import { Graph } from "../../components/Graph";
 
 type ReferencesFilters = {
   authors: "multi-select";
+  citing_authors: "multi-select";
 };
 
 export const CITING = React.memo(() => {
@@ -20,9 +21,15 @@ export const CITING = React.memo(() => {
   const filters: FilterItem<ReferencesFilters>[] = [
     {
       name: "authors",
-      label: "Фамилия И.О. автора",
+      label: "Цитируемые авторы",
       filter_type: "multi-select",
-      filter_api_url_search_n_pagination: "/graph/filters/authors",
+      filter_api_url_search_n_pagination: "/graph/filters/cited_authors",
+    },
+    {
+      name: "citing_authors",
+      label: "Цитирующие авторы",
+      filter_type: "multi-select",
+      filter_api_url_search_n_pagination: "/graph/filters/citing_authors",
     },
   ];
 
