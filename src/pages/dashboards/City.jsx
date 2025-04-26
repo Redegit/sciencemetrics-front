@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import * as echarts from "echarts";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from "../../api/request";
+import { getPublicationsWord } from "../../utils/getPublicationsWord";
 
 export const CITY = () => {
   const chartRef = useRef(null);
@@ -12,20 +13,6 @@ export const CITY = () => {
   const [authors, setAuthors] = useState([]);
   const [authorsLoading, setAuthorsLoading] = useState(false);
   const chartInstance = useRef(null);
-
-  const getPublicationsWord = (count) => {
-    if (count % 10 <= 2) return "публикаций";
-    switch (count % 10) {
-      case 1:
-        return "публикация";
-      case 2:
-      case 3:
-      case 4:
-        return "публикации";
-      default:
-        return "публикаций";
-    }
-  };
 
   const getAuthorsWord = (count) => {
     if (count % 10 <= 2) return "авторов";

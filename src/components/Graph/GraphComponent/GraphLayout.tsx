@@ -6,6 +6,7 @@ import { graphNodeGradients } from "../../../constants/graphNodeGradients";
 import styles from "./GraphComponent.module.css";
 import { GraphZoomControls } from "./GraphZoomControls";
 import React from "react";
+import { getPublicationsWord } from "../../../utils/getPublicationsWord";
 
 type Props = {
   options?: GraphOptions;
@@ -37,20 +38,28 @@ export const GraphLayout = React.memo<Props>(({ graphData, options }) => {
       formatter: function (params: echarts.ECElementEvent) {
         if (params.dataType === "node") {
           const nodeData = params.data as GraphNode;
-          return (
-            `${params.name}<br/>Количество публикаций: ${
-              params.value || "Нет данных"
-            }<br/>` +
-            `${
-              nodeData.aliases.length > 0
-                ? `Алиасы:<br/> ${nodeData.aliases.join("<br/>")}<br/>`
-                : ""
-            }` +
-            `ID: ${nodeData.id}`
-          );
+          let nodeLabel = `<b>${params.name}</b>`;
+          if (nodeData.value) {
+            nodeLabel += `<br/><b>${nodeData.value}</b> ${getPublicationsWord(
+              nodeData.value
+            )}`;
+          }
+          if (nodeData.aliases.length > 0) {
+            nodeLabel += `<br/><b>Алиасы</b>: <br/>${nodeData.aliases.join("<br/>")}`;
+          }
+          nodeLabel += `<br/>ID: ${nodeData.id}`;
+
+          return nodeLabel;
         } else if (params.dataType === "edge") {
           const edgeData = params.data as GraphLink;
-          return `${params.name}<br/>${edgeData.weight} публикаций`;
+          let edgeLabel = params.name;
+          if (edgeData.weight) {
+            edgeLabel += `<br/>${edgeData.weight} ${getPublicationsWord(
+              edgeData.weight
+            )}`;
+          }
+
+          return edgeLabel;
         }
         return params.name;
       },
