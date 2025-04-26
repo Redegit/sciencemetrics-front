@@ -281,11 +281,6 @@ export const RATING = () => {
             </DashboardLayoutContainer>
 
             <style jsx>{`
-                .filters {
-                    padding: 20px;
-                    background: #f8f9fa;
-                    margin-bottom: 20px;
-                }
                 .charts-container {
                     display: flex;
                     flex-wrap: wrap;
