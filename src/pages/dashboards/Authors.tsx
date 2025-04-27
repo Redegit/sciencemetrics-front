@@ -18,17 +18,15 @@ type AuthorsFilters = {
 };
 
 export const AUTHORS = React.memo(() => {
-  const { control, handleSubmit, reset } = useForm<FiltersForm<AuthorsFilters>>(
-    {
-      defaultValues: {
-        authors: [],
-        organizations: [],
-        keywords: [],
-        cities: [],
-        min_publications: "3", // string is used for number input
-      },
-    }
-  );
+  const { control, handleSubmit, reset, getValues } = useForm<FiltersForm<AuthorsFilters>>({
+    defaultValues: {
+      authors: [],
+      organizations: [],
+      keywords: [],
+      cities: [],
+      min_publications: "3",
+    },
+  });
 
   const filters: FilterItem<AuthorsFilters>[] = [
     {
@@ -74,16 +72,21 @@ export const AUTHORS = React.memo(() => {
     node: {
       title: "Публикации автора",
       columns: [
-        {
-          label: "Название",
-          name: "title",
-        },
+        { label: "Название", name: "title" },
         { label: "Журнал", name: "journal" },
         { label: "Год", name: "year" },
       ],
       getData: async ({ nodeId, page = 1 }) => {
-        return (await request.get(
-          `/graph/authors/table/node?id=${nodeId}&page=${page}`
+        const formValues = getValues();
+        return (await request.post(
+            `/graph/authors/table/node?page=${page}`,
+            {
+              authors: [Number(nodeId)],
+              organizations: formValues.organizations || [],
+              keywords: formValues.keywords || [],
+              cities: formValues.cities || [],
+              min_publications: formValues.min_publications || "3",
+            }
         )) as GraphTableData;
       },
     },
@@ -94,19 +97,27 @@ export const AUTHORS = React.memo(() => {
         { label: "Журнал", name: "journal" },
         { label: "Год", name: "year" },
       ],
-      getData: async ({ source, target }) => {
-        return (await request.get(
-          `/graph/authors/table/link?source=${source}&target=${target}`
+      getData: async ({ source, target, page = 1 }) => {
+        const formValues = getValues();
+        return (await request.post(
+            `/graph/authors/table/link?page=${page}`,
+            {
+              authors: [Number(source), Number(target)],
+              organizations: formValues.organizations || [],
+              keywords: formValues.keywords || [],
+              cities: formValues.cities || [],
+              min_publications: formValues.min_publications || "3",
+            }
         )) as GraphTableData;
       },
     },
   };
 
   return (
-    <Graph
-      graphName="authors"
-      graphTables={graphTables}
-      {...{ control, handleSubmit, reset, filters }}
-    />
+      <Graph
+          graphName="authors"
+          graphTables={graphTables}
+          {...{ control, handleSubmit, reset, filters }}
+      />
   );
 });
