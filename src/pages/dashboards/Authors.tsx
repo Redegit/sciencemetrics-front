@@ -28,6 +28,7 @@ export const AUTHORS = React.memo(() => {
     },
   });
 
+
   const filters: FilterItem<AuthorsFilters>[] = [
     {
       name: "authors",
@@ -80,7 +81,7 @@ export const AUTHORS = React.memo(() => {
         return (await request.post(
             `/graph/authors/table/node?page=${page}`,
             {
-              authors: [nodeId],
+              authors: [Number(nodeId)],  // <-- тут преобразуем
               organizations: [],
               keywords: [],
               cities: [],
@@ -96,11 +97,12 @@ export const AUTHORS = React.memo(() => {
         { label: "Журнал", name: "journal" },
         { label: "Год", name: "year" },
       ],
+
       getData: async ({ source, target, page = 1 }) => {
         return (await request.post(
             `/graph/authors/table/link?page=${page}`,
             {
-              authors: [source, target],
+              authors: [Number(source), Number(target)],
               organizations: [],
               keywords: [],
               cities: [],
