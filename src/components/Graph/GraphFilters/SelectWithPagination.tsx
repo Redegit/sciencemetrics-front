@@ -27,14 +27,14 @@ export const SelectWithPagination = React.memo(
       _: unknown, // loadedOptions
       additional: { page?: number } = {}
     ) => {
-      const page = additional.page || 1;
       try {
+        const page = additional.page || 1;
         const data = await getFiltersData(
           filter_api_url_search_n_pagination,
           search,
           page
         );
-        setError(true);
+        setError(false);
         return {
           options: data.items,
           hasMore: data.hasMore,
@@ -76,6 +76,7 @@ export const SelectWithPagination = React.memo(
         isClearable
         loadOptions={loadOptions}
         loadingMessage={() => "Загрузка..."}
+        debounceTimeout={500}
         noOptionsMessage={() =>
           error ? "Ошибка получения данных" : "Нет доступных вариантов"
         }
