@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import ReactECharts from "echarts-for-react";
 import {
   ClickedItem,
@@ -140,31 +140,48 @@ export const GraphLayout = React.memo<Props>(
       ],
     };
 
-    const handleNodeClick = (data: GraphNode) => {
-      const nodeId = data.id;
-      if (graphTables?.node && nodeId !== undefined) {
-        setClickedItem({
-          params: {
-            nodeId,
-          },
-          type: "node",
-        });
-      }
-      console.log("Clicked node:", data);
-    };
+    const handleNodeClick = useCallback(
+      (data: GraphNode) => {
+        const nodeId = data.id;
+        if (graphTables?.node && nodeId !== undefined) {
+          setClickedItem({
+            params: {
+              nodeId,
+            },
+            type: "node",
+          });
+        }
+      },
+      [graphTables?.node]
+    );
 
-    const handleLinkClick = (data: GraphLink) => {
-      console.log("Clicked link:", data);
-    };
+    const handleLinkClick = useCallback(
+      (data: GraphLink) => {
+        const { source, target } = data;
+        if (graphTables?.node && target && source) {
+          setClickedItem({
+            params: {
+              source,
+              target,
+            },
+            type: "link",
+          });
+        }
+      },
+      [graphTables?.node]
+    );
 
-    const handleGraphClick = (params: echarts.ECElementEvent) => {
-      const data = params.data;
-      if (params.dataType === "node") {
-        handleNodeClick(data as GraphNode);
-      } else if (params.dataType === "edge") {
-        handleLinkClick(data as GraphLink);
-      }
-    };
+    const handleGraphClick = useCallback(
+      (params: echarts.ECElementEvent) => {
+        const data = params.data;
+        if (params.dataType === "node") {
+          handleNodeClick(data as GraphNode);
+        } else if (params.dataType === "edge") {
+          handleLinkClick(data as GraphLink);
+        }
+      },
+      [handleNodeClick, handleLinkClick]
+    );
 
     useEffect(() => {
       const chart = chartRef.current?.getEchartsInstance();
@@ -177,7 +194,7 @@ export const GraphLayout = React.memo<Props>(
           chart.off("click");
         }
       };
-    }, []);
+    }, [handleGraphClick]);
 
     return (
       <div className={styles.graph_container}>

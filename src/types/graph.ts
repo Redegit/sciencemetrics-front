@@ -22,8 +22,8 @@ export type GraphNode = {
 };
 
 export type GraphLink = {
-  source: string | number;
-  target: string | number;
+  source: string;
+  target: string;
   weight?: number;
   itemStyle?: ItemStyle;
 };
