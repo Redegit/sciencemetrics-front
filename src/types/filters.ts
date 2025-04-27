@@ -4,7 +4,8 @@ export type FilterType =
   | "checkbox" // not implemented yet
   | "radio" // not implemented yet
   | "input"
-  | "slider"; // not implemented yet
+  | "slider" // not implemented yet
+  | "year_range";
 
 // filter items. Сами фильтры
 export type SelectOption = {
@@ -46,6 +47,12 @@ export type InputFilterItem<T extends string> = BaseFilterItem<T> & {
     | "required"
   >;
 
+export type YearRangeFilterItem<T extends string> = BaseFilterItem<T> & {
+  filter_type: "year_range";
+  min: number;
+  max: number;
+};
+
 export type TypedFilterItem<
   T extends string,
   K extends FilterType
@@ -55,6 +62,8 @@ export type TypedFilterItem<
   ? MultiSelectFilterItem<T>
   : K extends "input"
   ? InputFilterItem<T>
+  : K extends "year_range"
+  ? YearRangeFilterItem<T>
   : never;
 
 export type FilterItem<T extends FilterConfig> = {
@@ -64,11 +73,18 @@ export type FilterItem<T extends FilterConfig> = {
 // filter form. Значение фильтров для отправки на сервер
 export type FilterConfig = Record<string, FilterType>;
 
+export type YearRange = {
+  from: number;
+  to: number;
+};
+
 export type FiltersForm<T extends FilterConfig> = {
   [K in keyof T]: T[K] extends "multi-select" | "select"
     ? SelectOption["value"][]
     : T[K] extends "input"
     ? string | number | boolean
+    : T[K] extends "year_range"
+    ? YearRange
     : never;
 };
 

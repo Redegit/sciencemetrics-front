@@ -7,3 +7,4 @@ export * from "./Maps";
 export * from "./Orgs";
 export * from "./Rating";
 export * from "./Wordcloud";
+export * from "./AuthorArticles";
