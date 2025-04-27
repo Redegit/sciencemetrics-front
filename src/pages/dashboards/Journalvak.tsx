@@ -10,6 +10,7 @@ import {
   ChartErrorMessage,
   ChartStatus,
 } from "../../components/BarChart/BarChartPlaceholder";
+import { DownloadExcelButton } from "../../components/DownloadExcelButton/DownloadExcelButton";
 
 type AuthorArticlesFilters = {
   authors: "select";
@@ -19,6 +20,7 @@ type AuthorArticlesFilters = {
 export const JOURNALVAK = React.memo(() => {
   const [chartData, setChartData] = useState<VakChartData | null>(null);
   const [filtersKey, setFiltersKey] = useState(0);
+  const [selectedAuthorId, setSelectedAuthorId] = useState<string | null>(null);
 
   const [status, setStatus] = useState<ChartStatus>("filtersEmpty");
   const [errorMessage, setErrorMessage] = useState<ChartErrorMessage>(null);
@@ -112,6 +114,8 @@ export const JOURNALVAK = React.memo(() => {
         filters.years_range.from !== null &&
         filters.years_range.to !== null;
 
+      setSelectedAuthorId(filters.authors[0]);
+
       if (hasActiveFilters) {
         fetchChartData(filters);
       } else {
@@ -134,7 +138,12 @@ export const JOURNALVAK = React.memo(() => {
       />
       <DashboardLayoutContainer>
         {status === "success" && chartData ? (
-          <BarChart data={chartData} />
+          <>
+            {selectedAuthorId && (
+              <DownloadExcelButton authorId={selectedAuthorId} />
+            )}
+            <BarChart data={chartData} />
+          </>
         ) : (
           <BarChartPlaceholder status={status} errorMessage={errorMessage} />
         )}

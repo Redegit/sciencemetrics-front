@@ -1,0 +1,32 @@
+.downloadExcelButton {
+  background-color: #d4e9d5;
+  height: 2.5rem;
+  z-index: 2;
+
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+
+  position: absolute;
+  inset: 20px 20px auto auto;
+
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+
+  svg {
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  &:hover {
+    background-color: #c4e0c5;
+  }
+
+  .downloadExcelButtonDelimiter {
+    width: 1px;
+    height: 100%;
+    background-color: #a0c8a0;
+  }
+}

@@ -34,4 +34,11 @@ export const request = {
     }
     return response.json();
   },
+  blob: async (url: string) => {
+    const response = await fetch(createUrl(url));
+    if (!response.ok) {
+      throw new Error(`Ошибка: ${response.status}`);
+    }
+    return response.blob();
+  },
 };
