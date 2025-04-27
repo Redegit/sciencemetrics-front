@@ -5,7 +5,7 @@ import React from "react";
 type Props = {
   data: VakChartData;
 };
-export const BarChart = React.memo<Props>(({ data }) => {
+export const VakBarChart = React.memo<Props>(({ data }) => {
   const keys: VakCategory[] = ["К1", "К2", "К3"];
   const specializations = Object.keys(data) as Array<keyof VakChartData>;
   

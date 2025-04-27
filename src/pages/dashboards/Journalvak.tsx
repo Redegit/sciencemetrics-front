@@ -2,14 +2,14 @@ import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FilterItem, FiltersForm, VakChartData } from "../../types";
 import { Filters } from "../../components/Graph/GraphFilters/Filters";
-import { BarChart } from "../../components/BarChart/BarChart";
+import { VakBarChart } from "../../components/VakBarChart/VakBarChart";
 import { request } from "../../api/request";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import {
   BarChartPlaceholder,
   ChartErrorMessage,
   ChartStatus,
-} from "../../components/BarChart/BarChartPlaceholder";
+} from "../../components/VakBarChart/VakBarChartPlaceholder";
 import { DownloadExcelButton } from "../../components/DownloadExcelButton/DownloadExcelButton";
 
 type AuthorArticlesFilters = {
@@ -142,7 +142,7 @@ export const JOURNALVAK = React.memo(() => {
             {selectedAuthorId && (
               <DownloadExcelButton authorId={selectedAuthorId} />
             )}
-            <BarChart data={chartData} />
+            <VakBarChart data={chartData} />
           </>
         ) : (
           <BarChartPlaceholder status={status} errorMessage={errorMessage} />
