@@ -2,6 +2,7 @@ import React, { JSX } from "react";
 import {
   Controller,
   type Control,
+  type ControllerRenderProps,
   type Path,
   type UseFormHandleSubmit,
 } from "react-hook-form";
@@ -9,13 +10,18 @@ import {
 import { Button, ButtonGroup, Form, Stack } from "react-bootstrap";
 import { filtersBootstrapLikeStyle } from "./FilterStyle";
 import { SelectWithPagination } from "./SelectWithPagination";
+
 import {
   FilterConfig,
   FilterItem,
   FiltersForm,
   InputFilterItem,
+  YearRange,
+  YearRangeFilterItem,
 } from "../../../types";
+import "./Filters.scss";
 import styles from "./Filters.module.css";
+import { YearRangeSelect } from "./YearRangeSelect";
 
 type Props<T extends FilterConfig> = {
   filterItems: FilterItem<T>[];
@@ -93,6 +99,27 @@ export const Filters = React.memo(
                         />
                       );
                     }
+                    case "year_range":
+                      return (
+                        <YearRangeSelect
+                          minYear={
+                            (filter as YearRangeFilterItem<typeof field.name>)
+                              .min
+                          }
+                          maxYear={
+                            (filter as YearRangeFilterItem<typeof field.name>)
+                              .max
+                          }
+                          field={
+                            field as ControllerRenderProps<
+                              FiltersForm<T>,
+                              Path<FiltersForm<T>>
+                            > & {
+                              value: YearRange | undefined;
+                            }
+                          }
+                        />
+                      );
                     default:
                       return <></>;
                   }

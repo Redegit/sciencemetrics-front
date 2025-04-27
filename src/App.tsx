@@ -18,6 +18,7 @@ import {
   Error503,
   Error413,
   LoginPage,
+  AUTHOR_ARTICLES,
 } from "./pages";
 import { DashboardPageWrapper } from "./hoc/DashboardPageWrapper";
 import { AuthProvider } from "./contexts/AuthProvider";
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/journalvak/" element={<JOURNALVAK />} />
                   <Route path="/articles/" element={<ARTICLES />} />
                   <Route path="/city/" element={<CITY />} />
+                  <Route path="/author_articles" element={<AUTHOR_ARTICLES />} />
                 </Route>
 
                 <Route path="/error403/" element={<Error403 />} />
