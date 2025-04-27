@@ -57,3 +57,40 @@ export type ColorStop = {
 };
 
 export type Gradient = ColorStop[];
+
+// graph table (для отображения данных в таблице при клике на узел или ребро)
+export type ClickedItemType = "node" | "link";
+
+export type GraphTableColumn = {
+  name: string;
+  label: string;
+};
+
+export type GraphTableData = {
+  items: Array<
+    Record<string, string | number> & { key: string; link?: string }
+  >;
+  hasMore: boolean;
+};
+
+export type GraphTableFetchArgs<T extends ClickedItemType> = (T extends "node"
+  ? { nodeId: string }
+  : T extends "link"
+  ? { source: string; target: string }
+  : never) & { page?: number };
+
+export type GraphTable<T extends ClickedItemType> = {
+  title: string;
+  columns: GraphTableColumn[];
+  getData: (args: GraphTableFetchArgs<T>) => Promise<GraphTableData>;
+};
+
+export type ClickedItem<T extends ClickedItemType> = {
+  params: GraphTableFetchArgs<T>;
+  type: T;
+};
+
+export type GraphTables = {
+  node?: GraphTable<"node">;
+  link?: GraphTable<"link">;
+};

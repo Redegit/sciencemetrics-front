@@ -7,7 +7,6 @@ import {
 } from "react-hook-form";
 
 import { Button, ButtonGroup, Form, Stack } from "react-bootstrap";
-import "./Filters.css";
 import { filtersBootstrapLikeStyle } from "./FilterStyle";
 import { SelectWithPagination } from "./SelectWithPagination";
 import {

@@ -1,20 +1,6 @@
 import React from "react";
 import { ErrorMessage, GraphStatus } from "../Graph";
-import styles from "./GraphComponent.module.css";
-
-const Placeholders = {
-  FiltersEmpty: () => (
-    <div className={styles.error}>
-      <p>Пожалуйста, примените хотя бы один фильтр</p>
-    </div>
-  ),
-  Error: ({ error }: { error: ErrorMessage }) => (
-    <div className={styles.error}>
-      <p>{error}</p>
-    </div>
-  ),
-  Loading: () => <div className={styles.loading}>Загрузка данных...</div>,
-};
+import { Placeholders } from "./Placeholders";
 
 type Props = {
   status: GraphStatus;
@@ -22,24 +8,15 @@ type Props = {
 };
 export const GraphPlaceholder = React.memo<Props>(
   ({ status, errorMessage }) => {
-    let PlaceholderComponent;
-
     switch (status) {
       case "loading":
-        PlaceholderComponent = Placeholders.Loading;
-        break;
+        return <Placeholders.Loading />;
       case "error":
-        PlaceholderComponent = () => (
-          <Placeholders.Error error={errorMessage} />
-        );
-        break;
+        return <Placeholders.Error error={errorMessage} />;
       case "filtersEmpty":
-        PlaceholderComponent = Placeholders.FiltersEmpty;
-        break;
+        return <Placeholders.FiltersEmpty />;
       default:
-        PlaceholderComponent = () => <div>{status}</div>;
+        return <div>{status}</div>;
     }
-
-    return PlaceholderComponent ? <PlaceholderComponent /> : null;
   }
 );

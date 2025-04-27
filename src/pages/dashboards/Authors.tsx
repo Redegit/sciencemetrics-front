@@ -1,7 +1,13 @@
 import React from "react";
 import { Graph } from "../../components/Graph";
 import { useForm } from "react-hook-form";
-import { FilterItem, FiltersForm } from "../../types";
+import {
+  FilterItem,
+  FiltersForm,
+  GraphTableData,
+  GraphTables,
+} from "../../types";
+import { request } from "../../api/request";
 
 type AuthorsFilters = {
   authors: "multi-select";
@@ -65,7 +71,43 @@ export const AUTHORS = React.memo(() => {
     },
   ];
 
+  const graphTables: GraphTables = {
+    node: {
+      title: "Публикации автора",
+      columns: [
+        {
+          label: "Название",
+          name: "title",
+        },
+        { label: "Журнал", name: "journal" },
+        { label: "Год", name: "year" },
+      ],
+      getData: async ({ nodeId, page = 1 }) => {
+        return (await request.get(
+          `/graph/authors/table/node?id=${nodeId}&page=${page}`
+        )) as GraphTableData;
+      },
+    },
+    link: {
+      title: "Совместные публикации",
+      columns: [
+        { label: "Название", name: "title" },
+        { label: "Журнал", name: "journal" },
+        { label: "Год", name: "year" },
+      ],
+      getData: async ({ source, target }) => {
+        return (await request.get(
+          `/graph/authors/table/link?source=${source}&target=${target}`
+        )) as GraphTableData;
+      },
+    },
+  };
+
   return (
-    <Graph graphName="authors" {...{ control, handleSubmit, reset, filters }} />
+    <Graph
+      graphName="authors"
+      graphTables={graphTables}
+      {...{ control, handleSubmit, reset, filters }}
+    />
   );
 });

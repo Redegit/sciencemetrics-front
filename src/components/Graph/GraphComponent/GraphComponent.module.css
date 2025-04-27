@@ -1,4 +1,9 @@
-.graphContainer {
+.graph_container {
+    width: 100%;
+}
+
+.graph_container__position {
+    position: relative;
     width: 100%;
 }
 
