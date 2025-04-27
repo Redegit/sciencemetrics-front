@@ -65,7 +65,6 @@ export const AUTHORS = React.memo(() => {
       filter_type: "input",
       type: "number",
       min: 1,
-      defaultValue: 3,
       column: 2,
       required: true,
     },

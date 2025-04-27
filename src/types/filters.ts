@@ -36,7 +36,6 @@ export type InputFilterItem<T extends string> = BaseFilterItem<T> & {
 } & Pick<
     React.ComponentProps<"input">,
     | "placeholder"
-    | "defaultValue"
     | "maxLength"
     | "minLength"
     | "type"
