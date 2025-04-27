@@ -1,16 +1,14 @@
 import ReactECharts from "echarts-for-react";
-import { VakChartData } from "../../types";
+import { VakCategory, VakChartData } from "../../types";
 import React from "react";
 
 type Props = {
   data: VakChartData;
 };
 export const BarChart = React.memo<Props>(({ data }) => {
+  const keys: VakCategory[] = ["К1", "К2", "К3"];
   const specializations = Object.keys(data) as Array<keyof VakChartData>;
-  const keys = Object.keys(data[specializations[0]]) as Array<
-    keyof VakChartData[(typeof specializations)[0]]
-  >;
-
+  
   const option = {
     tooltip: { trigger: "axis", confine: true },
     legend: { data: keys },

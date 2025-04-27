@@ -67,9 +67,16 @@ export const JOURNALVAK = React.memo(() => {
         setStatus("loading");
 
         const transformedFilters = transformFilters(filters);
-        const data = await request.get(
+        const data = (await request.get(
           `/statistics/vak-categories?authorid=${transformedFilters.authorid}&date_from=${transformedFilters.date_from}&date_to=${transformedFilters.date_to}`
-        );
+        )) as VakChartData;
+
+        if (Object.keys(data).length == 0) {
+          setChartData(null);
+          setStatus("error");
+          setErrorMessage("Похоже, что по вашим фильтрам ничего не найдено");
+          return;
+        }
 
         setChartData(data);
         setStatus("success");
