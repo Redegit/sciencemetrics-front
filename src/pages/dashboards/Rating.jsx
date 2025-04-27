@@ -11,7 +11,7 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
         if (!chartRef.current) return;
 
         const chart = echarts.init(chartRef.current);
-        
+
         if (!data || data.length === 0) {
             chart.setOption({
                 xAxis: { show: false },
@@ -22,8 +22,8 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
         }
 
         const option = {
-            title: { 
-                text: title, 
+            title: {
+                text: title,
                 left: 'center',
                 textStyle: {
                     fontSize: 14,
@@ -32,35 +32,29 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
             },
             tooltip: {
                 trigger: 'axis',
+                confine: true,
                 axisPointer: { type: 'shadow' },
                 formatter: '{b}: {c}'
             },
             xAxis: {
                 type: 'category',
                 data: data.map(item => item[0]),
-                axisLabel: { 
+                axisLabel: {
                     rotate: 45,
                     interval: 0,
                     fontSize: 12,
                     margin: 15,
                     formatter: (value) => {
-                        const maxLength = 25;
-                        if (value.length > maxLength) {
-                            const parts = [];
-                            for (let i = 0; i < value.length; i += maxLength) {
-                                parts.push(value.substring(i, i + maxLength));
-                            }
-                            return parts.join('\n');
-                        }
-                        return value;
+                        const maxLength = 20;
+                        return value.length > maxLength ? value.slice(0, maxLength) + '...' : value;
                     }
                 },
                 axisTick: {
                     alignWithLabel: true
                 }
             },
-            yAxis: { 
-                type: 'value', 
+            yAxis: {
+                type: 'value',
                 name: yAxisName,
                 nameTextStyle: {
                     padding: [0, 0, 0, 40]
@@ -70,13 +64,13 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
                 name: 'Упоминания',
                 type: 'bar',
                 data: data.map(item => item[1]),
-                itemStyle: { 
+                itemStyle: {
                     color: color,
                     borderRadius: [4, 4, 0, 0]
                 },
                 barWidth: '40%',
-                label: { 
-                    show: true, 
+                label: {
+                    show: true,
                     position: 'top',
                     fontSize: 10
                 }
@@ -104,14 +98,14 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
     return <div ref={chartRef} style={{ width: '100%', height: '500px' }} />;
 };
 
-const Filters = ({ 
-    organizations, 
-    keywords, 
-    selectedOrganization, 
-    selectedKeyword,
-    onOrganizationChange,
-    onKeywordChange
-}) => (
+const Filters = ({
+                     organizations,
+                     keywords,
+                     selectedOrganization,
+                     selectedKeyword,
+                     onOrganizationChange,
+                     onKeywordChange
+                 }) => (
     <div className="filters">
         <Form>
             <Form.Group className="mb-3">
@@ -128,7 +122,7 @@ const Filters = ({
             </Form.Group>
 
             <Form.Group>
-                <Form.Label>Организация</Form.Label>
+                <Form.Label>Организация (где больше 200 публикаций)</Form.Label>
                 <Form.Control
                     as="select"
                     value={selectedOrganization}
@@ -153,6 +147,35 @@ export const RATING = () => {
     const [topKeywords, setTopKeywords] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const fetchTopData = async (keyword, organizationId) => {
+        if (!keyword || !organizationId) return;
+
+        try {
+            const [orgsResponse, keywordsResponse] = await Promise.all([
+                fetch(createUrl(`/statistics/rating/organizations-by-keyword?keyword=${encodeURIComponent(keyword)}`)),
+                fetch(createUrl(`/statistics/rating/keywords-by-organization?organizationid=${organizationId}`))
+            ]);
+
+            if (!orgsResponse.ok || !keywordsResponse.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const [orgsData, keywordsData] = await Promise.all([
+                orgsResponse.json(),
+                keywordsResponse.json()
+            ]);
+
+            const prepareChartData = (data, nameKey = 'name', countKey = 'count') => {
+                return data.map(item => [item[nameKey], item[countKey]]);
+            };
+
+            setTopOrganizations(prepareChartData(orgsData, 'name', 'count'));
+            setTopKeywords(prepareChartData(keywordsData, 'keyword', 'count'));
+        } catch (error) {
+            console.error('Error loading top data:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
@@ -172,15 +195,30 @@ export const RATING = () => {
 
                 setOrganizations(orgsData);
                 setKeywords(keywordsData);
-                
-                if (orgsData.length > 0) {
-                    setSelectedOrganization(orgsData[0].name);
-                    setSelectedOrganizationId(orgsData[0].id.toString()); // Преобразуем ID в строку
+
+                let defaultOrganization = orgsData.find(org => org.name.includes('финансовый университет при правительстве рф'));
+                if (!defaultOrganization && orgsData.length > 0) {
+                    defaultOrganization = orgsData[0];
                 }
-                if (keywordsData.length > 0) {
-                    setSelectedKeyword(keywordsData[0]);
+
+                let defaultKeyword = keywordsData.find(kw => kw.includes('цифровизация'));
+                if (!defaultKeyword && keywordsData.length > 0) {
+                    defaultKeyword = keywordsData[0];
                 }
-                
+
+                if (defaultOrganization) {
+                    setSelectedOrganization(defaultOrganization.name);
+                    setSelectedOrganizationId(defaultOrganization.id.toString());
+                }
+                if (defaultKeyword) {
+                    setSelectedKeyword(defaultKeyword);
+                }
+
+                // сразу загружаем графики
+                if (defaultOrganization && defaultKeyword) {
+                    await fetchTopData(defaultKeyword, defaultOrganization.id.toString());
+                }
+
                 setLoading(false);
             } catch (error) {
                 console.error('Error loading initial data:', error);
@@ -192,44 +230,14 @@ export const RATING = () => {
     }, []);
 
     useEffect(() => {
-        const fetchTopData = async () => {
-            if (!selectedKeyword || !selectedOrganizationId) return;
-
-            try {
-                const [orgsResponse, keywordsResponse] = await Promise.all([
-                    fetch(createUrl(`/statistics/rating/organizations-by-keyword?keyword=${encodeURIComponent(selectedKeyword)}`)),
-                    fetch(createUrl(`/statistics/rating/keywords-by-organization?organizationid=${selectedOrganizationId}`))
-                ]);
-
-                if (!orgsResponse.ok || !keywordsResponse.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const [orgsData, keywordsData] = await Promise.all([
-                    orgsResponse.json(),
-                    keywordsResponse.json()
-                ]);
-
-                // Преобразуем данные для диаграмм
-                const prepareChartData = (data, nameKey = 'name', countKey = 'count') => {
-                    return data.map(item => [item[nameKey], item[countKey]]);
-                };
-
-                setTopOrganizations(prepareChartData(orgsData, 'name', 'count'));
-                setTopKeywords(prepareChartData(keywordsData, 'keyword', 'count'));
-            } catch (error) {
-                console.error('Error loading top data:', error);
-            }
-        };
-
-        fetchTopData();
+        fetchTopData(selectedKeyword, selectedOrganizationId);
     }, [selectedKeyword, selectedOrganizationId]);
 
     const handleOrganizationChange = (e) => {
         const selectedOrg = organizations.find(org => org.name === e.target.value);
         if (selectedOrg) {
             setSelectedOrganization(selectedOrg.name);
-            setSelectedOrganizationId(selectedOrg.id.toString()); // Преобразуем ID в строку
+            setSelectedOrganizationId(selectedOrg.id.toString());
         }
     };
 
@@ -256,9 +264,9 @@ export const RATING = () => {
                 <div className="charts-container">
                     <div className="chart-wrapper">
                         <div className="chart-card">
-                            <BarChart 
+                            <BarChart
                                 data={topOrganizations}
-                                title={`Топ-10 организаций по ключевому слову: ${selectedKeyword}`}
+                                title={`Топ-10 организаций по ключевому слову:\n ${selectedKeyword}`}
                                 xAxisName="Организации"
                                 yAxisName="Упоминания"
                                 color="#42bbc6"
@@ -268,9 +276,9 @@ export const RATING = () => {
 
                     <div className="chart-wrapper">
                         <div className="chart-card">
-                            <BarChart 
+                            <BarChart
                                 data={topKeywords}
-                                title={`Топ-10 ключевых слов для: ${selectedOrganization}`}
+                                title={`Топ-10 ключевых слов для:\n ${selectedOrganization}`}
                                 xAxisName="Ключевые слова"
                                 yAxisName="Упоминания"
                                 color="#42bbc6"
@@ -301,6 +309,7 @@ export const RATING = () => {
                     height: 100%;
                     width: 100%;
                 }
+
                 @media (max-width: 1400px) {
                     .chart-wrapper {
                         flex: 1 1 100%;

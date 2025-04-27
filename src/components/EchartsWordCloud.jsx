@@ -7,19 +7,11 @@ const EchartsWordCloud = ({ data, year }) => {
   const chartInstance = useRef(null);
 
   useEffect(() => {
-    // Initialize chart
+    if (!chartRef.current) return;
+
     chartInstance.current = echarts.init(chartRef.current);
 
     const options = {
-      title: {
-        text: `Отображение популярных терминов за ${year} год (Топ-20)`,
-        left: "center",
-        top: 20,
-        textStyle: {
-          fontSize: 18,
-          fontWeight: 'bold'
-        }
-      },
       tooltip: {
         show: true,
         formatter: (params) => {
@@ -65,7 +57,6 @@ const EchartsWordCloud = ({ data, year }) => {
     const handleResize = () => chartInstance.current?.resize();
     window.addEventListener("resize", handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
       if (chartInstance.current) {
@@ -76,17 +67,22 @@ const EchartsWordCloud = ({ data, year }) => {
   }, [data, year]);
 
   return (
-    <div
-      ref={chartRef}
-      style={{
-        width: "100%",
-        height: "500px",
-        margin: "0 auto",
-        borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        backgroundColor: "#fff",
-      }}
-    />
+      <div style={{ width: "100%", textAlign: "center", marginBottom: "20px" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "700", marginBottom: "20px", color: "#004C8C" }}>
+          Популярные ключевые слова за {year} год
+        </h2>
+        <div
+            ref={chartRef}
+            style={{
+              width: "100%",
+              height: "500px",
+              margin: "0 auto",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              backgroundColor: "#fff",
+            }}
+        />
+      </div>
   );
 };
 

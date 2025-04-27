@@ -128,7 +128,7 @@ export const ARTICLES = () => {
       <div
         ref={chartRef}
         style={{
-          width: "450%",
+          width: "400%",
           height: "500px",
           minHeight: "300px",
         }}

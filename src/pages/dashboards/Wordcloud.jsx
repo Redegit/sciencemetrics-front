@@ -9,36 +9,40 @@ export const WORDCLOUD = () => {
   const [wordData, setWordData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. Сначала загружаем года
   useEffect(() => {
     const fetchYears = async () => {
       try {
         const response = await request.get("statistics/years");
-        if (Array.isArray(response.data)) {
-          const sortedYears = response.data.sort((a, b) => b - a); // новые года первыми
+        const yearsArray = response?.data?.items || response?.items || [];
+
+        if (Array.isArray(yearsArray)) {
+          const sortedYears = yearsArray.sort((a, b) => b - a);
           setYears(sortedYears);
 
           if (!selectedYear && sortedYears.length > 0) {
-            setSelectedYear(sortedYears[0].toString()); // Ставим выбранный ГОД после загрузки
+            setSelectedYear(sortedYears[0].toString());
           }
+        } else {
+          console.error("Ошибка: Неверный формат ответа по годам", response);
         }
       } catch (error) {
-        console.error("Ошибка загрузки годов:", error);
+        console.error("Ошибка при загрузке годов:", error);
       }
     };
 
     fetchYears();
   }, []);
 
-  // 2. Потом подгружаем слова при изменении года
   useEffect(() => {
-    if (!selectedYear) return;
-    const fetchData = async () => {
+    const fetchWords = async () => {
+      if (!selectedYear) return;
       try {
         setLoading(true);
         const response = await request.get(`/statistics/keywords?year=${selectedYear}`);
-        const transformedData = response.data
-            .slice(0, 20)
+        const wordsArray = response?.data || response || [];
+
+        const transformedData = (Array.isArray(wordsArray) ? wordsArray : [])
+            .slice(0, 50)
             .map(({ keyword, count }) => ({
               name: keyword,
               value: count,
@@ -53,7 +57,7 @@ export const WORDCLOUD = () => {
       }
     };
 
-    fetchData();
+    fetchWords();
   }, [selectedYear]);
 
   const handleYearChange = (e) => {
@@ -61,7 +65,9 @@ export const WORDCLOUD = () => {
   };
 
   const clearYearFilter = () => {
-    setSelectedYear("");
+    if (years.length > 0) {
+      setSelectedYear(years[0].toString()); // Сбрасываем на первый (самый новый) год
+    }
   };
 
   return (
@@ -76,18 +82,17 @@ export const WORDCLOUD = () => {
                   onChange={handleYearChange}
                   disabled={!years.length}
               >
-                <option value="">Все года</option>
                 {years.map((year) => (
                     <option key={year} value={year}>
                       {year}
                     </option>
                 ))}
               </select>
-              {selectedYear && (
+              {years.length > 0 && (
                   <button
                       onClick={clearYearFilter}
                       className="clear-filter-btn"
-                      title="Очистить фильтр"
+                      title="Сбросить фильтр на текущий год"
                   >
                     &times;
                   </button>
