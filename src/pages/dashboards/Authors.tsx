@@ -18,7 +18,7 @@ type AuthorsFilters = {
 };
 
 export const AUTHORS = React.memo(() => {
-  const { control, handleSubmit, reset } = useForm<FiltersForm<AuthorsFilters>>({
+  const { control, handleSubmit, reset, getValues } = useForm<FiltersForm<AuthorsFilters>>({
     defaultValues: {
       authors: [],
       organizations: [],
@@ -27,7 +27,6 @@ export const AUTHORS = React.memo(() => {
       min_publications: "3",
     },
   });
-
 
   const filters: FilterItem<AuthorsFilters>[] = [
     {
@@ -78,14 +77,15 @@ export const AUTHORS = React.memo(() => {
         { label: "Год", name: "year" },
       ],
       getData: async ({ nodeId, page = 1 }) => {
+        const formValues = getValues();
         return (await request.post(
             `/graph/authors/table/node?page=${page}`,
             {
-              authors: [Number(nodeId)],  // <-- тут преобразуем
-              organizations: [],
-              keywords: [],
-              cities: [],
-              min_publications: "3",
+              authors: [Number(nodeId)],
+              organizations: formValues.organizations || [],
+              keywords: formValues.keywords || [],
+              cities: formValues.cities || [],
+              min_publications: formValues.min_publications || "3",
             }
         )) as GraphTableData;
       },
@@ -97,16 +97,16 @@ export const AUTHORS = React.memo(() => {
         { label: "Журнал", name: "journal" },
         { label: "Год", name: "year" },
       ],
-
       getData: async ({ source, target, page = 1 }) => {
+        const formValues = getValues();
         return (await request.post(
             `/graph/authors/table/link?page=${page}`,
             {
               authors: [Number(source), Number(target)],
-              organizations: [],
-              keywords: [],
-              cities: [],
-              min_publications: "3",
+              organizations: formValues.organizations || [],
+              keywords: formValues.keywords || [],
+              cities: formValues.cities || [],
+              min_publications: formValues.min_publications || "3",
             }
         )) as GraphTableData;
       },
