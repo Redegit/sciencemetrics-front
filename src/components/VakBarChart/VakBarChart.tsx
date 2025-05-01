@@ -6,12 +6,18 @@ type Props = {
   data: VakChartData;
 };
 export const VakBarChart = React.memo<Props>(({ data }) => {
-  const keys: VakCategory[] = ["К1", "К2", "К3"];
+  const keys: VakCategory[] = ["К3", "К2", "К1"];
   const specializations = Object.keys(data) as Array<keyof VakChartData>;
+
+  const categoryColors: Record<VakCategory, string> = {
+    "К1": "#c6c6c6",
+    "К2": "#3063ae",
+    "К3": "#db1d25"
+  };
   
   const option = {
     tooltip: { trigger: "axis", confine: true },
-    legend: { data: keys },
+    legend: { data: keys.reverse() },
     xAxis: {
       type: "category",
       data: specializations,
@@ -39,6 +45,9 @@ export const VakBarChart = React.memo<Props>(({ data }) => {
           return params.value > 0 ? params.value : "";
         },
       },
+      itemStyle: {
+        color: categoryColors[key],
+      },    
       data: specializations.map((spec) => data[spec][key]),
     })),
     dataZoom: [
@@ -53,11 +62,7 @@ export const VakBarChart = React.memo<Props>(({ data }) => {
         handleIcon: handleIconPath,
         handleSize: "80%",
         handleStyle: {
-          color: "#fff",
-          shadowBlur: 3,
-          shadowColor: "rgba(0, 0, 0, 0.6)",
-          shadowOffsetX: 2,
-          shadowOffsetY: 2,
+          color: "rgba(0, 0, 0, 0)",
         },
       },
       {
