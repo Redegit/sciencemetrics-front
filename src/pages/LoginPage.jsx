@@ -1,6 +1,5 @@
 import { useState } from "react";
-import "../css/login.css";
-import "../css/styles.css";
+import "../css/Login.scss";
 import { useAuth } from "../hook/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -25,7 +24,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className="login-page">
       <video
         autoPlay
         muted

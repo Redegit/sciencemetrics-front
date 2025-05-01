@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from '../../api/request';
-import '../../css/Maps.css';
+import '../../css/Maps.scss';
 
 const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword }) => {
   return (

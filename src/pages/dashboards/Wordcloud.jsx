@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import EchartsWordCloud from "../../components/EchartsWordCloud";
 import { request } from "../../api/request";
+import "../../css/Wordcloud.scss";
 
 export const WORDCLOUD = () => {
   const [years, setYears] = useState([]);
@@ -38,15 +39,17 @@ export const WORDCLOUD = () => {
       if (!selectedYear) return;
       try {
         setLoading(true);
-        const response = await request.get(`/statistics/keywords?year=${selectedYear}`);
+        const response = await request.get(
+          `/statistics/keywords?year=${selectedYear}`
+        );
         const wordsArray = response?.data || response || [];
 
         const transformedData = (Array.isArray(wordsArray) ? wordsArray : [])
-            .slice(0, 50)
-            .map(({ keyword, count }) => ({
-              name: keyword,
-              value: count,
-            }));
+          .slice(0, 50)
+          .map(({ keyword, count }) => ({
+            name: keyword,
+            value: count,
+          }));
 
         setWordData(transformedData);
       } catch (error) {
@@ -71,46 +74,46 @@ export const WORDCLOUD = () => {
   };
 
   return (
-      <>
-        <div className="filters">
-          <div className="year-filter">
-            <label htmlFor="year-select">Фильтр по году:</label>
-            <div className="select-wrapper">
-              <select
-                  id="year-select"
-                  value={selectedYear}
-                  onChange={handleYearChange}
-                  disabled={!years.length}
+    <>
+      <div className="filters">
+        <div className="year-filter">
+          <label htmlFor="year-select">Фильтр по году:</label>
+          <div className="select-wrapper">
+            <select
+              id="year-select"
+              value={selectedYear}
+              onChange={handleYearChange}
+              disabled={!years.length}
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            {years.length > 0 && (
+              <button
+                onClick={clearYearFilter}
+                className="clear-filter-btn"
+                title="Сбросить фильтр на текущий год"
               >
-                {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                ))}
-              </select>
-              {years.length > 0 && (
-                  <button
-                      onClick={clearYearFilter}
-                      className="clear-filter-btn"
-                      title="Сбросить фильтр на текущий год"
-                  >
-                    &times;
-                  </button>
-              )}
-            </div>
+                &times;
+              </button>
+            )}
           </div>
         </div>
+      </div>
 
-        <DashboardLayoutContainer>
-          {loading ? (
-              <div className="loading">Загрузка данных...</div>
-          ) : (
-              <EchartsWordCloud
-                  data={wordData}
-                  year={selectedYear ? Number(selectedYear) : undefined}
-              />
-          )}
-        </DashboardLayoutContainer>
-      </>
+      <DashboardLayoutContainer>
+        {loading ? (
+          <div className="loading">Загрузка данных...</div>
+        ) : (
+          <EchartsWordCloud
+            data={wordData}
+            year={selectedYear ? Number(selectedYear) : undefined}
+          />
+        )}
+      </DashboardLayoutContainer>
+    </>
   );
 };
