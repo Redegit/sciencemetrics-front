@@ -3,34 +3,37 @@ import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from '../../api/request';
 import '../../css/Maps.scss';
+import { CrossSvg } from '../../components/CrossSvg';
 
 const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword }) => {
   return (
-    <div className="keyword-filter">
-      <label htmlFor="keyword-select">Фильтр по ключевым словам:</label>
-      <div className="select-wrapper">
-        <select
-          id="keyword-select"
-          value={selectedKeyword}
-          onChange={(e) => onKeywordChange(e.target.value)}
-          disabled={!keywords.length}
-        >
-          <option value="">Все ключевые слова</option>
-          {keywords.map((keyword) => (
-            <option key={keyword} value={keyword}>
-              {keyword}
-            </option>
-          ))}
-        </select>
-        {selectedKeyword && (
-          <button 
+    <div className="filters-container">
+      <div className="select-filter">
+        <label htmlFor="keyword-select">Фильтр по ключевым словам:</label>
+        <div className="select-wrapper">
+          <select
+            id="keyword-select"
+            value={selectedKeyword}
+            onChange={(e) => onKeywordChange(e.target.value)}
+            disabled={!keywords.length}
+            >
+            <option value="">Все ключевые слова</option>
+            {keywords.map((keyword) => (
+              <option key={keyword} value={keyword}>
+                {keyword}
+              </option>
+            ))}
+          </select>
+          {selectedKeyword && (
+            <button 
             onClick={onClearKeyword}
             className="clear-filter-btn"
             title="Очистить фильтр"
-          >
-            &times;
-          </button>
-        )}
+            >
+              <CrossSvg />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -188,7 +191,7 @@ export const MAPS = () => {
               <div className="panel-header">
                 <h3>
                   Организации в городе {activeCity}
-                  {selectedKeyword && <span className="keyword-filter"> (фильтр: "{selectedKeyword}")</span>}
+                  {selectedKeyword && <span className="select-filter">"> (фильтр: "{selectedKeyword}")</span>}
                 </h3>
                 <button 
                   onClick={() => setActiveCity(null)}

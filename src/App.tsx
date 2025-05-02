@@ -1,6 +1,7 @@
 import { BasePageWrapper } from "./hoc/BasePageWrapper";
 import "./App.css";
 import "./css/styles.css";
+import "./css/FilterSelect.scss";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   MAPS,

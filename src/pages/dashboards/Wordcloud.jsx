@@ -3,6 +3,7 @@ import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import EchartsWordCloud from "../../components/EchartsWordCloud";
 import { request } from "../../api/request";
 import "../../css/Wordcloud.scss";
+import { CrossSvg } from "../../components/CrossSvg";
 
 export const WORDCLOUD = () => {
   const [years, setYears] = useState([]);
@@ -75,8 +76,8 @@ export const WORDCLOUD = () => {
 
   return (
     <>
-      <div className="filters">
-        <div className="year-filter">
+      <div className="filters-container">
+        <div className="select-filter">
           <label htmlFor="year-select">Фильтр по году:</label>
           <div className="select-wrapper">
             <select
@@ -97,7 +98,7 @@ export const WORDCLOUD = () => {
                 className="clear-filter-btn"
                 title="Сбросить фильтр на текущий год"
               >
-                &times;
+                <CrossSvg />
               </button>
             )}
           </div>

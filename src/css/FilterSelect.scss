@@ -1,0 +1,81 @@
+.filters-container {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+
+  .select-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    label {
+      font-weight: 500;
+      color: #4a5568;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .select-wrapper {
+      --gap: 0.5em;
+      --select-padding-inline: 8px;
+      --select-padding-block: 12px;
+      --clear-btn-size: 0.8em;
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: var(--gap);
+
+      select {
+        width: 100%;
+        padding: var(--select-padding-inline) var(--select-padding-block);
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        background: #ffffff;
+        font-size: 14px;
+        appearance: none;
+        transition: border-color 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: #4299e1;
+        }
+
+        &:not(:last-child) {
+          padding-right: calc(
+            var(--select-padding-inline) + var(--clear-btn-size) + var(--gap)
+          );
+        }
+      }
+
+      .clear-filter-btn {
+        position: absolute;
+        right: var(--select-padding-inline);
+        background: none;
+        border: none;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        font-size: var(--clear-btn-size);
+        transition: stroke 0.2s;
+        display: grid;
+        place-content: center;
+        padding: 0.2em;
+
+        & svg {
+          width: var(--clear-btn-size);
+          height: var(--clear-btn-size);
+          stroke: #a0aec0;
+          stroke-width: 2px;
+
+          &:hover {
+            stroke: #e53e3e;
+          }
+        }
+      }
+    }
+  }
+}
