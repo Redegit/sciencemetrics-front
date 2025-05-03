@@ -10,9 +10,9 @@ export const VakBarChart = React.memo<Props>(({ data }) => {
   const specializations = Object.keys(data) as Array<keyof VakChartData>;
 
   const categoryColors: Record<VakCategory, string> = {
-    "К1": "#c6c6c6",
-    "К2": "#3063ae",
-    "К3": "#db1d25"
+    "К1": "rgba(75,211,150,0.93)",
+    "К2": "rgba(42,127,181,0.93)",
+    "К3": "rgba(243,80,35,0.93)"
   };
   
   const option = {
