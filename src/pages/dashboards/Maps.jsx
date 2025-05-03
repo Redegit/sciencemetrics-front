@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
+import { YMaps, Map, Placemark, Polyline } from '@iminside/react-yandex-maps';
 import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from '../../api/request';
 import '../../css/Maps.scss';
@@ -44,6 +44,9 @@ export const MAPS = () => {
   const [citiesData, setCitiesData] = useState([]);
   const [organizationsData, setOrganizationsData] = useState([]);
   const [activeCity, setActiveCity] = useState(null);
+  const [connectionsData, setConnectionsData] = useState([]);
+  const [selectedConnection, setSelectedConnection] = useState(null);
+  const [minConnectionWeight] = useState(5);
   const [loading, setLoading] = useState({
     cities: false,
     orgs: false,
@@ -53,7 +56,83 @@ export const MAPS = () => {
   const [keywordsList, setKeywordsList] = useState([]);
   const [selectedKeyword, setSelectedKeyword] = useState('');
 
-   const calculatePointSize = (publications, maxPublications, currentZoom) => {
+  useEffect(() => {
+    const fetchConnections = async () => {
+      try {
+        const url = selectedKeyword
+            ? `map/city-connections?keyword=${encodeURIComponent(selectedKeyword)}`
+            : 'map/city-connections';
+        const data = await request.get(url);
+        setConnectionsData(data);
+      } catch (err) {
+        setError('Ошибка загрузки связей между городами');
+      }
+    };
+
+    fetchConnections();
+  }, [selectedKeyword]);
+
+  const getEffectiveMaxConnections = () => {
+    if (!connectionsData.length) return 100;
+    const sorted = [...connectionsData].map(c => c.weight).sort((a, b) => a - b);
+    const index = Math.floor(sorted.length * 0.9);
+    return sorted[index] || sorted[sorted.length - 1] || 100;
+  };
+
+  const calculateConnectionColor = (weight) => {
+    const effectiveMax = getEffectiveMaxConnections();
+    const position = Math.min(1, Math.sqrt(weight / effectiveMax));
+
+    let color;
+    if (position < 0.33) {
+      const t = position / 0.33;
+      color = interpolateColor("#42bbc6", "#2a98bf", t);
+    } else if (position < 0.66) {
+      const t = (position - 0.33) / 0.33;
+      color = interpolateColor("#2a98bf", "#2273b0", t);
+    } else {
+      const t = (position - 0.66) / 0.34;
+      color = interpolateColor("#2273b0", "#284e9d", t);
+    }
+    return color.replace(")", ", 0.8)").replace("rgb", "rgba");
+  };
+
+  const renderConnections = () => {
+    return connectionsData
+        .filter(conn => conn.weight >= minConnectionWeight)
+        .map(conn => {
+          const lineWidth = Math.min(8, Math.max(1, Math.log(conn.weight + 1)));
+          const lineColor = calculateConnectionColor(conn.weight);
+          const lineOpacity = Math.min(0.9, 0.3 + (conn.weight / 100));
+
+          return (
+              <Polyline
+                  key={`${conn.cityA}-${conn.cityB}-${conn.weight}`}
+                  geometry={[
+                    [conn.coordsA.lat, conn.coordsA.lon],
+                    [conn.coordsB.lat, conn.coordsB.lon]
+                  ]}
+                  options={{
+                    strokeColor: lineColor,
+                    strokeWidth: lineWidth,
+                    strokeOpacity: lineOpacity,
+                  }}
+                  properties={{
+                    hintContent: `
+                <div class="connection-hint">
+                  <strong>${conn.cityA} ↔ ${conn.cityB}</strong><br/>
+                  Совместных публикаций: ${formatNumber(conn.weight)}
+                  ${selectedKeyword ? `<br/>Ключевое слово: ${selectedKeyword}` : ''}
+                </div>
+              `,
+                  }}
+                  onClick={() => setSelectedConnection(conn)}
+              />
+          );
+        });
+  };
+
+  const calculatePointSize = (publications, maxPublications, currentZoom) => {
     const minSize = 14; 
     const maxSize = 45;  
     const baseZoom = 3; 
@@ -255,7 +334,8 @@ export const MAPS = () => {
                 height="60vh"
                 onBoundsChange={(e) => setZoom(e.get('newZoom'))}
               >
-          {!loading.cities && citiesData.length > 0 && (() => {
+                {!loading.cities && renderConnections()}
+                {!loading.cities && citiesData.length > 0 && (() => {
             const effectiveMax = getEffectiveMax(citiesData);
             
             return citiesData.map((city) => {
@@ -300,6 +380,34 @@ export const MAPS = () => {
               </Map>
             </YMaps>
           </div>
+
+          {selectedConnection && (
+              <div className="connection-panel">
+                <div className="panel-header">
+                  <h3>
+                    {selectedConnection.cityA} ↔ {selectedConnection.cityB}
+                    <button
+                        onClick={() => setSelectedConnection(null)}
+                        className="close-btn"
+                    >
+                      &times;
+                    </button>
+                  </h3>
+                </div>
+                <div className="connection-details">
+                  <p>
+                    <strong>Совместных публикаций: </strong>
+                    {formatNumber(selectedConnection.weight)}
+                  </p>
+                  {selectedKeyword && (
+                      <p>
+                        <strong>Ключевое слово:</strong>
+                        {selectedKeyword}
+                      </p>
+                  )}
+                </div>
+              </div>
+          )}
 
           {activeCity && (
             <div className="organizations-panel">
