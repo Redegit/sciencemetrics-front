@@ -32,7 +32,8 @@
     "serve": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest"
+    "test": "vitest",
+    "bench": "vitest bench --run"
   },
   "eslintConfig": {
     "extends": [

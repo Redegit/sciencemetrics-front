@@ -17,7 +17,7 @@ export const request = {
   get: async (url: string) => {
     const response = await fetch(createUrl(url));
     if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
+      throw new Error(`Ошибка: ${response.status}. ${await response.text()}`);
     }
     return response.json();
   },
@@ -30,14 +30,14 @@ export const request = {
       body: JSON.stringify(body),
     });
     if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
+      throw new Error(`Ошибка: ${response.status}. ${await response.text()}`);
     }
     return response.json();
   },
   blob: async (url: string) => {
     const response = await fetch(createUrl(url));
     if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
+      throw new Error(`Ошибка: ${response.status}. ${await response.text()}`);
     }
     return response.blob();
   },

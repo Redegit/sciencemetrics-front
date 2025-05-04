@@ -32,11 +32,12 @@
     "allowImportingTsExtensions": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
+    "types": ["vitest/globals"]
   },
   "include": [
     "src",
     "vitest.config.ts"
-  ],
+, "bench/transform.bench.ts"  ],
   "exclude": [
     "node_modules",
     "build"
