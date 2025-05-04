@@ -1,7 +1,7 @@
 export const getPublicationsWord = (count: number) => {
   const lastTwoDigits = count % 100;
 
-  if (lastTwoDigits === 11 && lastTwoDigits <= 14) {
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
     return "публикаций";
   }
 
