@@ -1,5 +1,5 @@
 import { graphNodeGradients } from "../constants/graphNodeGradients";
-import { ApiGraphData, ApiLink, ApiNode, GraphLink, GraphNode } from "../types";
+import { ApiGraphData, ApiLink, ApiNode, GraphData, GraphLink, GraphNode } from "../types";
 
 const getNodeSize = (scale: number) => {
   const minSize = 5;
@@ -7,7 +7,7 @@ const getNodeSize = (scale: number) => {
   return minSize + (maxSize - minSize) * scale;
 };
 
-export const transformGraphApiData = (apiData: ApiGraphData) => {
+export const transformGraphApiData = (apiData: ApiGraphData): GraphData => {
   const values = apiData.nodes.map((n) => n.value | 1);
   const min = Math.min(...values);
   const max = Math.max(...values);

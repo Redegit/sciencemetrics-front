@@ -31,10 +31,11 @@
     "noUnusedParameters": true,
     "allowImportingTsExtensions": true,
     "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "include": [
-    "src"
+    "src",
+    "vitest.config.ts"
   ],
   "exclude": [
     "node_modules",
