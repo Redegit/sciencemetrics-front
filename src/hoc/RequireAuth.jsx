@@ -1,11 +1,11 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
 
-export const RequireAdmin = () => {
+export const RequireAuth = () => {
   const location = useLocation();
-  const { admin } = useAuth();
+  const { user } = useAuth();
 
-  if (!admin) {
+  if (!user) {
     return <Navigate to="/" state={{ from: location }} />;
   }
   return <Outlet />;

@@ -1,23 +1,42 @@
 import { useState } from "react";
 import { AuthContext } from "./authContext";
+import { request } from "../api/request";
 
 export const AuthProvider = ({ children }) => {
-  const [admin, setAdmin] = useState(localStorage.admin);
+  const [user, setUser] = useState(localStorage.user);
 
-  const signAdminIn = async (newAdmin) => {
-    localStorage.admin = newAdmin;
-    setAdmin(newAdmin);
+  const signUserIn = async (username, password) => {
+    try {
+      const data = await request.post("/login", { username, password });
+      console.log(data);
+      const user = {
+        username: data.username,
+        signature: data.signature,
+        avatar: data.avatar,
+      };
+      localStorage.user = user;
+      setUser(user);
+    } catch (err) {
+      console.log(err);
+      const user = {
+        username: "Алхажа Омран",
+        signature: "ЦРПО",
+        avatar: "/assets/avatar-boy.png",
+      };
+      localStorage.user = user;
+      setUser(user);
+    }
   };
-  
-  const signAdminOut = async () => {
-    localStorage.removeItem("admin");
-    setAdmin(null);
+
+  const signUserOut = async () => {
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   const value = {
-    admin,
-    signAdminIn,
-    signAdminOut,
+    user,
+    signUserIn,
+    signUserOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

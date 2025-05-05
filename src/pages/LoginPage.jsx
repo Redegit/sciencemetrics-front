@@ -6,10 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { signAdminIn } = useAuth();
+  const { signUserIn } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,9 +18,15 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    await signAdminIn("admin");
-    navigate(fromPage, { replace: true });
+    const login = e.target[0].value;
+    const password = e.target[1].value;
+    try {
+      await signUserIn(login, password);
+      navigate(fromPage, { replace: true });
+    } catch (err) {
+      console.error(err);
+      setError("Не удалось войти в систему. Проверьте логин и пароль.");
+    }
   };
 
   return (
@@ -46,7 +52,7 @@ export const LoginPage = () => {
               </div>
 
               {location.state?.from && (
-                <div className="auth-required__message">
+                <div className="auth-required__message" style={{textAlign: "center"}}>
                   Сперва необходимо авторизоваться
                 </div>
               )}
@@ -61,6 +67,7 @@ export const LoginPage = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
+                  autoComplete="username"
                 />
               </div>
 
@@ -76,6 +83,7 @@ export const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -91,7 +99,7 @@ export const LoginPage = () => {
               </div>
 
               {error && (
-                <div id="passwordError" className="error-message">
+                <div id="passwordError" className="error-message" style={{textAlign: "center"}}>
                   {error}
                 </div>
               )}

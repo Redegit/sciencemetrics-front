@@ -23,7 +23,7 @@ import {
 } from "./pages";
 import { DashboardPageWrapper } from "./hoc/DashboardPageWrapper";
 import { AuthProvider } from "./contexts/AuthProvider";
-import { RequireAdmin } from "./hoc/RequireAdmin";
+import { RequireAuth } from "./hoc/RequireAuth";
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/login" element={<LoginPage />} />
 
-            <Route element={<RequireAdmin />}>
+            <Route element={<RequireAuth />}>
               <Route element={<BasePageWrapper />}>
                 <Route element={<DashboardPageWrapper />}>
                   <Route path="/maps/" element={<MAPS />} />

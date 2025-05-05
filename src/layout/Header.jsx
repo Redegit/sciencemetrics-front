@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
 
-export const Header = ({ user }) => {
-  const { signAdminOut } = useAuth();
+export const Header = () => {
+  const { user, signUserOut } = useAuth();
+
   // const navigate = useNavigate();
 
   const submitLogoutForm = async () => {
-    await signAdminOut();
+    await signUserOut();
     // navigate("/", { replace: true });
     // Handle logout logic here
     // document.getElementById("logoutForm").submit();
@@ -40,7 +41,7 @@ export const Header = ({ user }) => {
             </div>
           </div>
 
-          {user?.isAuthenticated && (
+          {user && (
             <>
               <div className="blockBanner">
                 <img className="imgBanner" alt="" src="/assets/rr5.png" />
@@ -57,16 +58,21 @@ export const Header = ({ user }) => {
                             loading="lazy"
                             alt=""
                             src={
-                              user?.profile?.sex === "Ж"
+                              user?.avatar ||
+                              (user?.profile?.sex === "Ж"
                                 ? "/assets/avatar-girl.jpg"
-                                : "/assets/avatar-boy.png"
+                                : "/assets/avatar-boy.png")
                             }
                           />
                         </div>
                         <div className="badge-instance">
-                          <b className="clayton-santos">Алхажа Омран</b>
+                          <b className="clayton-santos">
+                            {user?.username || "Алхажа Омран"}
+                          </b>
                           <b className="line4"></b>
-                          <b className="positionPerson">ЦРПО</b>
+                          <b className="positionPerson">
+                            {user?.signature || "ЦРПО"}
+                          </b>
                         </div>
                       </div>
                     </Link>
@@ -140,7 +146,7 @@ export const Header = ({ user }) => {
             </>
           )}
 
-          {!user?.isAuthenticated && (
+          {!user && (
             <div className="notification-button-parent">
               <Link to="/login" className="block-exit">
                 <svg
