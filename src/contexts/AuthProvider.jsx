@@ -2,19 +2,28 @@ import { useState } from "react";
 import { AuthContext } from "./authContext";
 import { request } from "../api/request";
 
+const loadUserFromStorage = () => {
+  const user = localStorage.getItem("user");
+  try {
+    return user && JSON.parse(user);
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(localStorage.user);
+  const [user, setUser] = useState(loadUserFromStorage());
 
   const signUserIn = async (username, password) => {
     try {
       const data = await request.post("/login", { username, password });
       console.log(data);
       const user = {
-        username: data.username,
+        username: data.name,
         signature: data.signature,
         avatar: data.avatar,
       };
-      localStorage.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
     } catch (err) {
       console.log(err);
@@ -23,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         signature: "ЦРПО",
         avatar: "/assets/avatar-boy.png",
       };
-      localStorage.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
     }
   };
