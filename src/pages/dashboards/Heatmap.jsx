@@ -9,6 +9,7 @@ import { request } from '../../api/request';
 // 4) Общие стили и SVG для кнопки «×»
 import '../../css/Maps.scss';
 import { CrossSvg } from '../../components/CrossSvg';
+import { DashboardLayoutContainer } from '../../hoc/DashboardLayoutContainer';
 
 // Компонент фильтров (копипаст из MAPS)
 const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword }) => (
@@ -125,22 +126,24 @@ function HeatmapPage() {
             </div>
 
             {/* Заголовок и карта */}
-            <div className="map-content">
-                <div className="map-wrapper" style={{ height: '50vh', borderRadius: '8px', overflow: 'hidden' }}>
-                    <div
-                        ref={mapContainerRef}
-                        style={{ width: '100%', height: '100%', background: '#eee' }}
-                    />
+            <DashboardLayoutContainer>
+                <div className="map-content">
+                    <div className="map-wrapper" style={{ height: '50vh', borderRadius: '8px', overflow: 'hidden' }}>
+                        <div
+                            ref={mapContainerRef}
+                            style={{ width: '100%', height: '100%', background: '#eee' }}
+                            />
+                    </div>
                 </div>
-            </div>
 
-            {/* Ошибки */}
-            {error && (
-                <div className="error-message">
-                    {error}
-                    <button onClick={() => setError(null)}>&times;</button>
-                </div>
-            )}
+                {/* Ошибки */}
+                {error && (
+                    <div className="error-message">
+                        {error}
+                        <button onClick={() => setError(null)}>&times;</button>
+                    </div>
+                )}
+            </DashboardLayoutContainer>
         </div>
     );
 }
