@@ -5,6 +5,7 @@ import "./css/FilterSelect.scss";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   MAPS,
+  HEATMAP,
   WORDCLOUD,
   ARTICLES,
   AUTHORS,
@@ -37,6 +38,7 @@ function App() {
               <Route element={<BasePageWrapper />}>
                 <Route element={<DashboardPageWrapper />}>
                   <Route path="/maps/" element={<MAPS />} />
+                  <Route path="/heatmap/" element={<HEATMAP />} />
                   <Route path="/wordcloud/" element={<WORDCLOUD />} />
                   <Route path="/authors/" element={<AUTHORS />} />
                   <Route path="/citing/" element={<CITING />} />
