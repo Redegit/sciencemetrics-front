@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 1) Импортируем CSS из node_modules
-import 'leaflet/dist/leaflet.css';
+import '/node_modules/leaflet/dist/leaflet.css';
 // 2) Импортируем сам Leaflet и плагин heat
 import L from 'leaflet';
 import 'leaflet.heat';
