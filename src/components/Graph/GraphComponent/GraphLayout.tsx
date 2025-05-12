@@ -120,9 +120,9 @@ export const GraphLayout = React.memo<Props>(
             formatter: (params: { data: { name: string } }) => params.data.name,
           },
           force: {
-            repulsion: 20,
-            gravity: 0.2,
-            edgeLength: 50,
+            repulsion: 100,
+            gravity: 0.1,
+            edgeLength: 100,
           },
           lineStyle: {
             width: 2,
