@@ -29,3 +29,7 @@
   min-width: 795px;
   max-width: 795px;
 }
+
+.btn-primary {
+  background-color: #0277bd !important;
+}
