@@ -24,12 +24,14 @@ import {
 import { DashboardPageWrapper } from "./hoc/DashboardPageWrapper";
 import { AuthProvider } from "./contexts/AuthProvider";
 import { RequireAuth } from "./hoc/RequireAuth";
+import { TitleUpdater } from "./layout/TitleUpdater";
 
 function App() {
   return (
     <div className="App">
       <AuthProvider>
         <BrowserRouter>
+          <TitleUpdater />
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/login" element={<LoginPage />} />
