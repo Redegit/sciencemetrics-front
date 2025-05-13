@@ -68,7 +68,8 @@ jobs:
 
       - name: Create issue if conflict
         if: steps.main.outputs.diff == 'true'
-        uses: peter-evans/create-issue@v5
+        uses: JasonEtco/create-an-issue@v2
+
         with:
           title: "GitLab has diverged from GitHub"
           body: |
