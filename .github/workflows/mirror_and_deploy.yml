@@ -1,0 +1,76 @@
+name: Mirror to gitlab and deploy on server
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        id: main
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            REPO_DIR="/root/sciencemetrics-front"
+            GITHUB_MIRROR_DIR="/root/sciencemetrics-front.git"
+            BUILD_DIR="/root/Naukometria_Flask"
+
+            echo "make_issue=false" >> $GITHUB_OUTPUT
+
+            cd /root || exit
+
+            # CLONE MIRROR
+            if [ ! -d "$GITHUB_MIRROR_DIR" ]; then
+              git clone --mirror https://github.com/Redegit/sciencemetrics-front.git "$GITHUB_MIRROR_DIR"
+              cd "$GITHUB_MIRROR_DIR"
+              git remote add gitlab https://devops.fa.ru/crpo/sci-metric.git
+            else
+              cd "$GITHUB_MIRROR_DIR"
+              git remote update
+
+              git fetch origin
+
+              git push --mirror gitlab
+
+              if git show-ref -q refs/heads/dev && git show-ref -q refs/remotes/gitlab/dev; then
+                DIFF=$(git diff refs/heads/dev refs/remotes/gitlab/dev)
+                if [ "$DIFF" ]; then
+                  echo "make_issue=false" >> $GITHUB_OUTPUT
+                fi
+              else
+                echo "One of the refs is missing, assuming changes."
+                echo "make_issue=false" >> $GITHUB_OUTPUT
+              fi
+            fi
+
+            # CLONE REPO
+            if [ ! -d "$REPO_DIR" ]; then
+              git clone https://github.com/Redegit/sciencemetrics-front.git
+              cd "$REPO_DIR"
+              git checkout dev
+            else
+              cd "$REPO_DIR"
+              git checkout dev
+              git fetch
+            fi
+
+            # BUILD
+            npm ci
+            npm run build
+
+            rm -rf "$BUILD_DIR/dist"
+            cp -r dist "$BUILD_DIR/"
+
+      - name: Create issue if conflict
+        if: steps.main.outputs.diff == 'true'
+        uses: peter-evans/create-issue@v5
+        with:
+          title: "GitLab has diverged from GitHub"
+          body: |
+            Push to GitLab was made, but repos are not same.
+            Please resolve manually.
