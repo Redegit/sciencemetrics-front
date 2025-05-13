@@ -34,6 +34,7 @@ jobs:
               git remote update
 
               git fetch origin
+              git fetch gitlab
 
               git push --mirror gitlab
 
@@ -56,7 +57,7 @@ jobs:
             else
               cd "$REPO_DIR"
               git checkout dev
-              git fetch
+              git pull
             fi
 
             # BUILD
