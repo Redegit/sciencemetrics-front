@@ -20,7 +20,7 @@ jobs:
             GITHUB_MIRROR_DIR="/root/sciencemetrics-front.git"
             BUILD_DIR="/root/Naukometria_Flask"
 
-            echo "make_issue=false" >> $GITHUB_OUTPUT
+            echo "diff=false" > /tmp/gitlab_diff.txt
 
             cd /root || exit
 
@@ -41,11 +41,11 @@ jobs:
               if git show-ref -q refs/heads/dev && git show-ref -q refs/remotes/gitlab/dev; then
                 DIFF=$(git diff refs/heads/dev refs/remotes/gitlab/dev)
                 if [ "$DIFF" ]; then
-                  echo "make_issue=false" >> $GITHUB_OUTPUT
+                  echo "diff=true" > /tmp/gitlab_diff.txt
                 fi
               else
                 echo "One of the refs is missing, assuming changes."
-                echo "make_issue=false" >> $GITHUB_OUTPUT
+                echo "diff=true" > /tmp/gitlab_diff.txt
               fi
             fi
 
@@ -67,8 +67,14 @@ jobs:
             rm -rf "$BUILD_DIR/dist"
             cp -r dist "$BUILD_DIR/"
 
+      - name: Read diff status
+        id: check
+        run: |
+          DIFF=$(ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cat /tmp/gitlab_diff.txt || echo "diff=false"')
+          echo "diff=$DIFF" >> $GITHUB_OUTPUT
+
       - name: Create issue if conflict
-        if: steps.main.outputs.diff == 'true'
+        if: steps.check.outputs.diff == 'true'
         uses: JasonEtco/create-an-issue@v2
 
         with:
