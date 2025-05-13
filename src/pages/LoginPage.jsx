@@ -105,7 +105,7 @@ export const LoginPage = () => {
               )}
 
               <div className="btnEnter">
-                <button className="button">Вход ахаха</button>
+                <button className="button">Вход да точно ахаха</button>
               </div>
             </form>
           </div>
