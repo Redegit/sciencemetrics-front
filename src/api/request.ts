@@ -1,6 +1,9 @@
-const baseUrl = __LOCAL__
+export const baseUrl = __LOCAL__
   ? "http://localhost:5001/api/"
-  : "http://46.8.232.101:5001/api/";
+  : __USE_FULL_PATH__
+  ? "http://46.8.232.101:5001/api/"
+  : "/api/";
+
 
 const truncateUrl = (url: string) => {
   if (url.startsWith("/")) {

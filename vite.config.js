@@ -14,6 +14,7 @@ export default defineConfig({
   },
   define: {
     __LOCAL__: process.argv.includes("--localhost"),
+    __USE_FULL_PATH__: process.argv.includes("--full-path"),
   },
   build: {
     minify: 'terser',

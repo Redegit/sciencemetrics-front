@@ -31,6 +31,7 @@
     "start": "vite",
     "start:local": "vite -- --localhost",
     "build": "vite build",
+    "build:full-path": "vite build -- --full-path",
     "serve": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
