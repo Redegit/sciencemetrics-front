@@ -39,8 +39,10 @@ jobs:
               git push --mirror gitlab
 
               if git show-ref -q refs/heads/dev && git show-ref -q refs/remotes/gitlab/dev; then
+                echo "git show-ref proceed"
                 DIFF=$(git diff refs/heads/dev refs/remotes/gitlab/dev)
                 if [ "$DIFF" ]; then
+                  echo "DIFF is true"
                   echo "diff=true" > /tmp/gitlab_diff.txt
                 fi
               else
@@ -77,7 +79,9 @@ jobs:
       - name: Read diff status
         id: check
         run: |
+          echo "Checking DIFF from file..."
           DIFF=$(ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cat /tmp/gitlab_diff.txt || echo "diff=false"')
+          echo "Diff is $DIFF"
           echo "diff=$DIFF" >> $GITHUB_OUTPUT
 
       - name: Create issue if conflict
