@@ -28,7 +28,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite -- --full-path",
     "start:local": "vite -- --localhost",
     "build": "vite build",
     "build:full-path": "vite build -- --full-path",
