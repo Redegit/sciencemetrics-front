@@ -1,16 +1,17 @@
-import { Header } from "../layout/Header";
-import { Navigation } from "../layout/Navigation";
+import { Header } from "../layout/Header/Header";
+import { Navigation } from "../layout/Navigation/Navigation";
 import { Outlet } from "react-router-dom";
 
 export const BasePageWrapper = () => {
   return (
-    <div>
-      <Header user={{ isAuthenticated: true }} />
-
+    <>
+      <Header />
       <main className="main">
-        <Navigation />
+        <aside>
+          <Navigation />
+        </aside>
         <Outlet />
       </main>
-    </div>
+    </>
   );
 };

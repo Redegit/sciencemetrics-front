@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as echarts from "echarts";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from "../../api/request";
 import { getPublicationsWord } from "../../utils/getPublicationsWord";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 export const CITY = () => {
   const chartRef = useRef(null);
@@ -171,30 +172,22 @@ export const CITY = () => {
 
     if (error) {
       return (
-        <div className="alert alert-danger">
-          Ошибка: {error}
-          <button
-            className="btn btn-sm btn-primary ms-3"
-            onClick={() => window.location.reload()}
-          >
-            Повторить
-          </button>
-        </div>
+        <Placeholder status="error" errorMessage={error} fullheight reloadBtn />
       );
     }
 
     const selectedCityData = citiesData.find((c) => c.name === selectedCity);
 
     return (
-      <div className="row g-3">
+      <div className="row g-3 flex-grow-1 p-3">
         <div className="col-lg-8">
-          <div className="card h-300">
+          <div className="card h-100">
             <div className="card-body p-12">
               <div
                 ref={chartRef}
                 style={{
-                  width: "300%",
-                  height: "500px",
+                  width: "100%",
+                  height: "100%",
                   minHeight: "300px",
                 }}
               />
@@ -203,7 +196,7 @@ export const CITY = () => {
         </div>
 
         <div className="col-lg-4">
-          <div className="card h-300">
+          <div className="card">
             <div className="card-body d-flex flex-column">
               <h6 className="card-title d-flex justify-content-between align-items-center mb-4">
                 <span className="fw-bold">
@@ -282,16 +275,15 @@ export const CITY = () => {
   };
 
   return (
-    <DashboardLayoutContainer>
-      <div className="dashboard-content">
+    <Dashboard.Body>
+      <Dashboard.Layout title="Распределение авторов по городам">
         <div className="text-center mb-3">
-          <h3 className="fw-light">Распределение авторов по городам</h3>
           <p className="text-muted small">
             Нажмите на сегмент диаграммы для просмотра топ-10 авторов
           </p>
         </div>
         {renderContent()}
-      </div>
-    </DashboardLayoutContainer>
+      </Dashboard.Layout>
+    </Dashboard.Body>
   );
 };

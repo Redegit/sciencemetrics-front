@@ -4,18 +4,17 @@ import { FilterItem, FiltersForm, VakChartData } from "../../types";
 import { Filters } from "../../components/Graph/GraphFilters/Filters";
 import { VakBarChart } from "../../components/VakBarChart/VakBarChart";
 import { request } from "../../api/request";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
-import {
-  BarChartPlaceholder,
-  ChartErrorMessage,
-  ChartStatus,
-} from "../../components/VakBarChart/VakBarChartPlaceholder";
 import { DownloadExcelButton } from "../../components/DownloadExcelButton/DownloadExcelButton";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 type AuthorArticlesFilters = {
   authors: "select";
   years_range: "year_range";
 };
+
+type ChartStatus = "loading" | "error" | "success" | "filtersEmpty";
+type ChartErrorMessage = string | null;
 
 export const JOURNALVAK = React.memo(() => {
   const [chartData, setChartData] = useState<VakChartData | null>(null);
@@ -127,16 +126,18 @@ export const JOURNALVAK = React.memo(() => {
   );
 
   return (
-    <>
-      <Filters
-        key={filtersKey}
-        filterItems={filters}
-        control={control}
-        onReset={resetFilters}
-        onSubmit={applyFilters}
-        handleSubmit={handleSubmit}
-      />
-      <DashboardLayoutContainer>
+    <Dashboard.Body>
+      <Dashboard.Filters>
+        <Filters
+          key={filtersKey}
+          filterItems={filters}
+          control={control}
+          onReset={resetFilters}
+          onSubmit={applyFilters}
+          handleSubmit={handleSubmit}
+        />
+      </Dashboard.Filters>
+      <Dashboard.Layout>
         {status === "success" && chartData ? (
           <>
             {selectedAuthorId && (
@@ -145,9 +146,9 @@ export const JOURNALVAK = React.memo(() => {
             <VakBarChart data={chartData} />
           </>
         ) : (
-          <BarChartPlaceholder status={status} errorMessage={errorMessage} />
+          <Placeholder status={status} errorMessage={errorMessage} fullheight />
         )}
-      </DashboardLayoutContainer>
-    </>
+      </Dashboard.Layout>
+    </Dashboard.Body>
   );
 });

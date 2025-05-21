@@ -1,0 +1,105 @@
+.dashboard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  flex: 1;
+
+  .dashboard-card {
+    padding: 1em;
+    border-radius: 0.5em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+  }
+
+  .filters-container {
+    .select-filter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      label {
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: var(--font-size-sm);
+        margin: 0;
+      }
+
+      .select-wrapper {
+        --gap: 0.5em;
+        --select-padding-inline: 8px;
+        --select-padding-block: 12px;
+        --clear-btn-size: 0.8em;
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+        display: flex;
+        align-items: center;
+        gap: var(--gap);
+
+        select {
+          width: 100%;
+          padding: var(--select-padding-inline) var(--select-padding-block);
+          border: 1px solid #cbd5e0;
+          border-radius: 6px;
+          background: #ffffff;
+          font-size: 14px;
+          appearance: none;
+          transition: border-color 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: #4299e1;
+          }
+
+          &:not(:last-child) {
+            padding-right: calc(
+              var(--select-padding-inline) + var(--clear-btn-size) + var(--gap)
+            );
+          }
+        }
+
+        .clear-filter-btn {
+          position: absolute;
+          right: var(--select-padding-inline);
+          background: none;
+          border: none;
+          margin: 0;
+          padding: 0;
+          cursor: pointer;
+          font-size: var(--clear-btn-size);
+          transition: stroke 0.2s;
+          display: grid;
+          place-content: center;
+          padding: 0.2em;
+
+          & svg {
+            width: var(--clear-btn-size);
+            height: var(--clear-btn-size);
+            stroke: #a0aec0;
+            stroke-width: 2px;
+
+            &:hover {
+              stroke: #e53e3e;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dashboard-layout-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    flex: 1;
+
+    .dashboard-title {
+      padding: 0.5em;
+      text-align: center;
+      margin: 0;
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+  }
+}

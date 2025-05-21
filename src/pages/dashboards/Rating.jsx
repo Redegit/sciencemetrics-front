@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Form } from "react-bootstrap";
 import * as echarts from "echarts";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { createUrl } from "../../api/request";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
   const chartRef = useRef(null);
@@ -110,7 +111,7 @@ const Filters = ({
   onOrganizationChange,
   onKeywordChange,
 }) => (
-  <div className="filters">
+  <Dashboard.Filters>
     <Form>
       <Form.Group className="mb-3">
         <Form.Label>Ключевое слово</Form.Label>
@@ -142,7 +143,7 @@ const Filters = ({
         </Form.Control>
       </Form.Group>
     </Form>
-  </div>
+  </Dashboard.Filters>
 );
 
 export const RATING = () => {
@@ -154,6 +155,7 @@ export const RATING = () => {
   const [topOrganizations, setTopOrganizations] = useState([]);
   const [topKeywords, setTopKeywords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchTopData = async (keyword, organizationId) => {
     if (!keyword || !organizationId) return;
@@ -194,6 +196,7 @@ export const RATING = () => {
       setTopKeywords(prepareChartData(keywordsData, "keyword", "count"));
     } catch (error) {
       console.error("Error loading top data:", error);
+      setError(`Error loading top data: ${error}`);
       setLoading(false);
     }
   };
@@ -243,14 +246,17 @@ export const RATING = () => {
         }
       } catch (error) {
         console.error("Error loading initial data:", error);
+        setError(`Error loading initial data: ${error}`);
         setLoading(false);
       }
     };
 
+    setError(null);
     fetchInitialData();
   }, []);
 
   useEffect(() => {
+    setError(null);
     fetchTopData(selectedKeyword, selectedOrganizationId);
   }, [selectedKeyword, selectedOrganizationId]);
 
@@ -269,7 +275,7 @@ export const RATING = () => {
   };
 
   return (
-    <>
+    <Dashboard.Body>
       <Filters
         organizations={organizations}
         keywords={keywords}
@@ -278,11 +284,11 @@ export const RATING = () => {
         onOrganizationChange={handleOrganizationChange}
         onKeywordChange={handleKeywordChange}
       />
-      <DashboardLayoutContainer>
+      <Dashboard.Layout>
         {loading ? (
-          <div style={{ width: "100%", textAlign: "center" }}>
-            Загрузка данных...
-          </div>
+          <Placeholder status="loading" fullheight />
+        ) : error ? (
+          <Placeholder status="error" errorMessage={error} fullheight />
         ) : (
           <div className="charts-container">
             <div className="chart-wrapper">
@@ -310,7 +316,7 @@ export const RATING = () => {
             </div>
           </div>
         )}
-      </DashboardLayoutContainer>
+      </Dashboard.Layout>
 
       <style jsx>{`
         .charts-container {
@@ -321,6 +327,7 @@ export const RATING = () => {
           width: 100%;
         }
         .chart-wrapper {
+          padding: 1em;
           flex: 0 0 48%;
           min-width: 0;
           box-sizing: border-box;
@@ -340,6 +347,6 @@ export const RATING = () => {
           }
         }
       `}</style>
-    </>
+    </Dashboard.Body>
   );
 };

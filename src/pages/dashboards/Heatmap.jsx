@@ -9,11 +9,12 @@ import { request } from '../../api/request';
 // 4) Общие стили и SVG для кнопки «×»
 import '../../css/Maps.scss';
 import { CrossSvg } from '../../components/CrossSvg';
-import { DashboardLayoutContainer } from '../../hoc/DashboardLayoutContainer';
+import { Dashboard } from '../../hoc/Dashboard';
+import { Placeholder } from '../../components/Placeholder/Placeholder';
 
 // Компонент фильтров (копипаст из MAPS)
 const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword }) => (
-    <div className="filters-container">
+    <Dashboard.Filters>
         <div className="select-filter">
             <label htmlFor="keyword-select">Фильтр по ключевым словам:</label>
             <div className="select-wrapper">
@@ -39,7 +40,7 @@ const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword })
                 )}
             </div>
         </div>
-    </div>
+    </Dashboard.Filters>
 );
 
 function HeatmapPage() {
@@ -114,21 +115,19 @@ function HeatmapPage() {
     }, [selectedKeyword]);
 
     return (
-        <div className="maps-page">
+        <Dashboard.Body className="maps-page">
             {/* Фильтры */}
-            <div className="filters">
-                <Filters
-                    keywords={keywordsList}
-                    selectedKeyword={selectedKeyword}
-                    onKeywordChange={kw => setSelectedKeyword(kw)}
-                    onClearKeyword={() => setSelectedKeyword('')}
-                />
-            </div>
+            <Filters
+                keywords={keywordsList}
+                selectedKeyword={selectedKeyword}
+                onKeywordChange={kw => setSelectedKeyword(kw)}
+                onClearKeyword={() => setSelectedKeyword('')}
+            />
 
             {/* Заголовок и карта */}
-            <DashboardLayoutContainer>
+            <Dashboard.Layout>
                 <div className="map-content">
-                    <div className="map-wrapper" style={{ height: '50vh', borderRadius: '8px', overflow: 'hidden' }}>
+                    <div className="map-wrapper" style={{ borderRadius: '8px', overflow: 'hidden' }}>
                         <div
                             ref={mapContainerRef}
                             style={{ width: '100%', height: '100%', background: '#eee' }}
@@ -138,13 +137,10 @@ function HeatmapPage() {
 
                 {/* Ошибки */}
                 {error && (
-                    <div className="error-message">
-                        {error}
-                        <button onClick={() => setError(null)}>&times;</button>
-                    </div>
+                    <Placeholder status='error' errorMessage={error} asPopUp />
                 )}
-            </DashboardLayoutContainer>
-        </div>
+            </Dashboard.Layout>
+        </Dashboard.Body>
     );
 }
 

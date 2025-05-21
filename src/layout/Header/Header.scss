@@ -1,0 +1,243 @@
+.elk-header {
+  padding: 0 var(--padding-smi);
+  position: relative;
+  margin-bottom: 1.5em;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 2em;
+
+  .header-left {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+
+    .header-logo {
+      img {
+        height: 4em;
+        width: 4em;
+        position: relative;
+        object-fit: cover;
+      }
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 1em;
+      background-color: var(--divider-color);
+    }
+
+    .constructor-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+
+      .header-link {
+        text-decoration: none;
+        color: var(--accent-light-color);
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        &:focus,
+        &:active {
+          outline: none;
+        }
+
+        .constructor-full {
+          margin: 0;
+          position: relative;
+          font-size: inherit;
+          line-height: 30px;
+          font-weight: 700;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: var(--accent-color);
+          }
+        }
+
+        .constructor-mini {
+          display: none;
+          margin: 0;
+          position: relative;
+          font-size: inherit;
+          line-height: 30px;
+          font-weight: 700;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+        }
+
+        @media (max-width: 670px) {
+          .constructor-mini {
+            display: block;
+          }
+
+          .constructor-full {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .blockBanner {
+    background-image: url("/assets/header_background_transparent.png");
+    padding: 0 3em;
+    background-repeat: repeat-x;
+    flex: 1;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background-color: var(--element-2-bg);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-2-color);
+
+    .logout-button {
+      flex-direction: row;
+      justify-content: flex-start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 5px;
+
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: var(--font-size-mini);
+        font-weight: bold;
+        transition: all 0.3s ease;
+        gap: 0.5em;
+        color: var(--text-2-color);
+
+        svg {
+          width: 2em;
+          height: 2em;
+
+          path {
+            transition: all 0.3s ease;
+            stroke: var(--text-2-color);
+          }
+        }
+
+        &:hover {
+          text-decoration: none;
+          color: var(--accent-dark-color);
+
+          svg {
+            path {
+              stroke: var(--accent-dark-color);
+            }
+          }
+        }
+      }
+    }
+
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      color: inherit;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      .profile-photo {
+        width: 3em;
+        aspect-ratio: 1;
+        margin: auto;
+        border-radius: 50%;
+        border: 1px solid var(--border-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        box-shadow: 0 0px 5px var(--border-color);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .badge {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        transition: color 0.3s ease;
+        text-align: left;
+        gap: 0.3em;
+
+        &:hover {
+          color: var(--accent-dark-color);
+        }
+
+        .name {
+          font-size: var(--font-size-mini);
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          width: min-content;
+        }
+
+        @media screen and (max-width: 750px) {
+          .name {
+            white-space: normal;
+          }
+        }
+
+        .signature {
+          font-size: var(--font-size-3xs);
+          line-height: 1;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 550px) {
+    .elk-header {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logout-button {
+      span {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .blockBanner {
+      display: none;
+    }
+  }
+}
+
+.dark {
+  .blockBanner {
+    opacity: 0.5;
+  }
+}

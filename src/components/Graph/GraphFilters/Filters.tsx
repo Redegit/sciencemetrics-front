@@ -129,11 +129,11 @@ export const Filters = React.memo(
           ))}
         </Stack>
 
-        <ButtonGroup className="filters__buttons">
+        <ButtonGroup className={styles.filters__buttons}>
           <Button variant="outline-secondary" onClick={onReset} type="button">
             Сбросить
           </Button>
-          <Button variant="primary" type="submit">
+          <Button type="submit">
             Применить
           </Button>
         </ButtonGroup>

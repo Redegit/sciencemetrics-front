@@ -16,10 +16,10 @@ import {
 } from "../../types";
 import { Filters } from "./GraphFilters/Filters";
 import { GraphLayout } from "./GraphComponent/GraphLayout";
-import { GraphPlaceholder } from "./GraphComponent/GraphPlaceholder";
 import { WarningModal } from "./GraphComponent/WarningModal";
 import { transformGraphApiData } from "../../utils/transformGraphApiData";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../Placeholder/Placeholder";
 
 type Props<T extends FilterConfig> = {
   graphName: string;
@@ -141,19 +141,21 @@ export const Graph = React.memo(
     }, []);
 
     return (
-      <>
+      <Dashboard.Body>
         {filters.length > 0 && (
-          <Filters
-            key={filtersKey}
-            filterItems={filters}
-            control={control}
-            onReset={resetFilters}
-            onSubmit={applyFilters}
-            handleSubmit={handleSubmit}
-          />
+          <Dashboard.Filters>
+            <Filters
+              key={filtersKey}
+              filterItems={filters}
+              control={control}
+              onReset={resetFilters}
+              onSubmit={applyFilters}
+              handleSubmit={handleSubmit}
+            />
+          </Dashboard.Filters>
         )}
 
-        <DashboardLayoutContainer>
+        <Dashboard.Layout>
           {status === "success" && graphData ? (
             <GraphLayout
               graphData={graphData}
@@ -161,16 +163,16 @@ export const Graph = React.memo(
               graphTables={graphTables}
             />
           ) : (
-            <GraphPlaceholder status={status} errorMessage={errorMessage} />
+            <Placeholder status={status} errorMessage={errorMessage} fullheight />
           )}
-        </DashboardLayoutContainer>
+        </Dashboard.Layout>
 
         <WarningModal
           showWarningModal={showWarningModal}
           handleConfirmLargeGraph={handleConfirmLargeGraph}
           pendingGraphData={pendingGraphData}
         />
-      </>
+      </Dashboard.Body>
     );
   }
 ) as <T extends FilterConfig>(props: Props<T>) => JSX.Element;

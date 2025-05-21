@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from "../../api/request";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 export const ARTICLES = () => {
   const [chartData, setChartData] = useState([]);
@@ -112,15 +113,7 @@ export const ARTICLES = () => {
 
     if (error) {
       return (
-        <div className="alert alert-danger">
-          Ошибка: {error}
-          <button
-            className="btn btn-sm btn-primary ms-3"
-            onClick={() => window.location.reload()}
-          >
-            Повторить
-          </button>
-        </div>
+        <Placeholder status="error" errorMessage={error} fullheight reloadBtn />
       );
     }
 
@@ -128,8 +121,8 @@ export const ARTICLES = () => {
       <div
         ref={chartRef}
         style={{
-          width: "400%",
-          height: "500px",
+          width: "100%",
+          height: "93%",
           minHeight: "300px",
         }}
       />
@@ -137,17 +130,10 @@ export const ARTICLES = () => {
   };
 
   return (
-    <>
-      <DashboardLayoutContainer>
-        <div className="dashboard-content">
-          <div className="text-center mb-4">
-            <h4 className="fw-light">Распределение статей по годам</h4>
-          </div>
-          <div className="card">
-            <div className="card-body">{renderContent()}</div>
-          </div>
-        </div>
-      </DashboardLayoutContainer>
-    </>
+    <Dashboard.Body>
+      <Dashboard.Layout title="Распределение статей по годам">
+        {renderContent()}
+      </Dashboard.Layout>
+    </Dashboard.Body>
   );
 };

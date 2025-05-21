@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { YMaps, Map, Placemark, Polyline } from '@iminside/react-yandex-maps';
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
 import { request } from '../../api/request';
 import '../../css/Maps.scss';
 import { CrossSvg } from '../../components/CrossSvg';
+import { Dashboard } from '../../hoc/Dashboard';
+import { Placeholder } from '../../components/Placeholder/Placeholder';
 
 const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword }) => {
   return (
-    <div className="filters-container">
+    <Dashboard.Filters>
       <div className="select-filter">
         <label htmlFor="keyword-select">Фильтр по ключевым словам:</label>
         <div className="select-wrapper">
@@ -35,7 +36,7 @@ const Filters = ({ keywords, selectedKeyword, onKeywordChange, onClearKeyword })
           )}
         </div>
       </div>
-    </div>
+    </Dashboard.Filters>
   );
 };
 
@@ -307,20 +308,18 @@ export const MAPS = () => {
   const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
   return (
-    <div className="maps-page">
-      <div className="filters">
-        <Filters
-          keywords={keywordsList}
-          selectedKeyword={selectedKeyword}
-          onKeywordChange={(keyword) => {
-            setSelectedKeyword(keyword);
-            setActiveCity(null);
-          }}
-          onClearKeyword={() => setSelectedKeyword('')}
-        />
-      </div>
+    <Dashboard.Body className="maps-page">
+      <Filters
+        keywords={keywordsList}
+        selectedKeyword={selectedKeyword}
+        onKeywordChange={(keyword) => {
+          setSelectedKeyword(keyword);
+          setActiveCity(null);
+        }}
+        onClearKeyword={() => setSelectedKeyword('')}
+      />
 
-      <DashboardLayoutContainer>
+      <Dashboard.Layout>
         <div className="map-content">
           <div className="map-wrapper">
             <YMaps query={{ lang: 'ru_RU', load: 'package.full' }}>
@@ -331,7 +330,7 @@ export const MAPS = () => {
                   controls: ['zoomControl', 'fullscreenControl']
                 }}
                 width="100%"
-                height="60vh"
+                height="100%"
                 onBoundsChange={(e) => setZoom(e.get('newZoom'))}
               >
                 {!loading.cities && renderConnections()}
@@ -453,12 +452,9 @@ export const MAPS = () => {
         </div>
 
         {error && (
-          <div className="error-message">
-            {error}
-            <button onClick={() => setError(null)}>&times;</button>
-          </div>
+          <Placeholder status='error' errorMessage={error} asPopUp />
         )}
-      </DashboardLayoutContainer>
-    </div>
+      </Dashboard.Layout>
+    </Dashboard.Body>
   );
 };

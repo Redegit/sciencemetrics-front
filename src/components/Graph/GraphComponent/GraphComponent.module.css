@@ -7,16 +7,6 @@
     width: 100%;
 }
 
-.error,
-.loading {
-    width: 100%;
-    text-align: center;
-
-    & > p {
-        margin: 0;
-    }
-}
-
 .graph_controls__container {
     position: absolute;
     top: 50%;

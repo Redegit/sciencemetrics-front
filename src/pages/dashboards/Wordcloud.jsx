@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { DashboardLayoutContainer } from "../../hoc/DashboardLayoutContainer";
-import EchartsWordCloud from "../../components/EchartsWordCloud";
+import EchartsWordCloud from "../../components/EchartsWordCloud/EchartsWordCloud";
 import { request } from "../../api/request";
-import "../../css/Wordcloud.scss";
 import { CrossSvg } from "../../components/CrossSvg";
+import { Dashboard } from "../../hoc/Dashboard";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 export const WORDCLOUD = () => {
   const [years, setYears] = useState([]);
+  const [error, setError] = useState(null)
   const [selectedYear, setSelectedYear] = useState("");
   const [wordData, setWordData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,11 +25,14 @@ export const WORDCLOUD = () => {
           if (!selectedYear && sortedYears.length > 0) {
             setSelectedYear(sortedYears[0].toString());
           }
+          setError(null);
         } else {
           console.error("Ошибка: Неверный формат ответа по годам", response);
+          setError(`Ошибка: Неверный формат ответа по годам: ${response}`);
         }
       } catch (error) {
         console.error("Ошибка при загрузке годов:", error);
+        setError(`Ошибка при загрузке годов: ${error}`);
       }
     };
 
@@ -53,9 +57,11 @@ export const WORDCLOUD = () => {
           }));
 
         setWordData(transformedData);
+        setError(null);
       } catch (error) {
         console.error("Ошибка загрузки ключевых слов:", error);
         setWordData([]);
+        setError(`Ошибка загрузки ключевых слов: ${error}`);
       } finally {
         setLoading(false);
       }
@@ -75,8 +81,8 @@ export const WORDCLOUD = () => {
   };
 
   return (
-    <>
-      <div className="filters-container">
+    <Dashboard.Body>
+      <Dashboard.Filters>
         <div className="select-filter">
           <label htmlFor="year-select">Фильтр по году:</label>
           <div className="select-wrapper">
@@ -103,18 +109,22 @@ export const WORDCLOUD = () => {
             )}
           </div>
         </div>
-      </div>
+      </Dashboard.Filters>
 
-      <DashboardLayoutContainer>
+      <Dashboard.Layout
+        title={`Популярные ключевые слова за ${selectedYear} год`}
+      >
         {loading ? (
-          <div className="loading">Загрузка данных...</div>
+          <Placeholder status="loading" fullheight />
+        ) : error ? (
+          <Placeholder status="error" errorMessage={error} fullheight />
         ) : (
           <EchartsWordCloud
             data={wordData}
             year={selectedYear ? Number(selectedYear) : undefined}
           />
         )}
-      </DashboardLayoutContainer>
-    </>
+      </Dashboard.Layout>
+    </Dashboard.Body>
   );
 };

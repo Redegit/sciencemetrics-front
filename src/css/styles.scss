@@ -1,0 +1,157 @@
+:root {
+  /* fonts */
+  --font-inter: Inter;
+
+  /* font sizes */
+  --font-size-base: 16px;
+  --font-size-xs: 12px;
+  --font-size-mini: 15px;
+  --font-size-5xl: 24px;
+  --font-size-sm: 14px;
+  --bold-18-size: 18px;
+  --bold-13-size: 13px;
+  --font-size-lgi: 19px;
+  --font-size-3xs: 10px;
+
+  /* Gaps */
+  --gap-xl: 20px;
+  --gap-3xs: 10px;
+  --gap-8xs: 5px;
+  --gap-5xs: 8px;
+  --gap-21xl: 40px;
+  --gap-11xl: 30px;
+  --gap-7xl: 26px;
+  --gap-12xl: 31px;
+  --gap-mini: 15px;
+  --gap-3xs-5: 9.5px;
+  --gap-8xs-7: 4.7px;
+
+  /* Paddings */
+  --padding-mini: 15px;
+  --padding-8xs: 5px;
+  --padding-3xs: 10px;
+  --padding-xs: 12px;
+  --padding-lg: 18px;
+  --padding-13xl: 32px;
+  --padding-11xs: 2px;
+  --padding-10xs: 3px;
+  --padding-6xs: 7px;
+  --padding-base: 16px;
+  --padding-9xs: 4px;
+  --padding-5xs: 8px;
+  --padding-xl: 20px;
+  --padding-4xl: 23px;
+  --padding-8xl: 27px;
+  --padding-lgi: 19px;
+  --padding-2xs-5: 10.5px;
+  --padding-24xl: 43px;
+  --padding-33xl: 52px;
+  --padding-4xs-5: 8.5px;
+  --padding-12xs: 1px;
+  --padding-4xs-4: 8.4px;
+  --padding-7xl: 26px;
+  --padding-sm: 14px;
+  --padding-12xl: 31px;
+  --padding-19xl: 38px;
+  --padding-6xl: 25px;
+  --padding-48xl: 67px;
+  --padding-3xl: 22px;
+  --padding-2xl: 21px;
+  --padding-54xl: 73px;
+  --padding-17xl: 36px;
+  --padding-34xl: 53px;
+  --padding-15xl: 34px;
+  --padding-7xs: 6px;
+  --padding-smi: 13px;
+  --padding-4xs: 9px;
+  --padding-11xl: 30px;
+  --padding-mid: 17px;
+
+  /* Border radiuses */
+  --br-xl: 20px;
+  --br-11xl: 30px;
+  --br-mini: 15px;
+  --br-8xs: 5px;
+  --br-31xl: 50px;
+  --br-5xs: 8px;
+  --br-12xs: 1px;
+  --br-10xl-9: 29.9px;
+  --br-81xl: 100px;
+  --br-6xs: 7px;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-inter), sans-serif !important;
+  font-size: var(--font-size-base);
+  height: 100%;
+  width: 100%;
+  min-height: 100svh;
+  // overflow: hidden;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  overflow-y: scroll;
+  background-color: var(--app-bg);
+
+  #root {
+    margin-inline: auto;
+    max-width: 2000px;
+    min-height: 100svh;
+
+    .App {
+      font-size: 16px;
+      width: 100%;
+      min-height: 100svh;
+      padding-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+
+      .main {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        flex: 1;
+        --main-padding: 1rem;
+        padding-inline: var(--main-padding);
+
+        .custom-container {
+          min-width: 0;
+          width: 100%;
+          border: 2px solid #edeff2;
+          border-radius: 15px;
+          padding: 1em;
+
+          display: flex;
+          flex-direction: column;
+          gap: 1em;
+        }
+      }
+    }
+  }
+}
+
+input {
+  transition: all 0.2s ease;
+}
+
+select {
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid var(--color-gainsboro-100);
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  width: 200px;
+}

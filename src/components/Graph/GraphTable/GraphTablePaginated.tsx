@@ -6,9 +6,9 @@ import {
   GraphTableData,
   GraphTables,
 } from "../../../types";
-import { TablePlaceholder } from "./GraphTablePlaceholders";
 import { Table } from "react-bootstrap";
 import styles from "./GraphTablePaginated.module.css";
+import { Placeholder } from "../../../components/Placeholder/Placeholder";
 
 type Props<T extends ClickedItemType> = {
   tablesOptions: GraphTables;
@@ -89,7 +89,7 @@ export const GraphTablePaginated = React.memo(
             </tbody>
           </Table>
           {status !== "success" && (
-            <TablePlaceholder
+            <Placeholder
               height={placeholderHeight}
               status={status}
               errorMessage={errorMessage}
