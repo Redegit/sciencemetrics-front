@@ -1,95 +1,95 @@
-# name: Mirror to gitlab and deploy on server
+name: Mirror to gitlab and deploy on server
 
-# on:
-#   push:
-#     branches: [dev]
+on:
+  push:
+    branches: [dev]
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Deploy via SSH
-#         id: main
-#         uses: appleboy/ssh-action@v1
-#         with:
-#           host: ${{ secrets.SSH_HOST }}
-#           username: ${{ secrets.SSH_USERNAME }}
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             REPO_DIR="/root/sciencemetrics-front"
-#             GITHUB_MIRROR_DIR="/root/sciencemetrics-front.git"
-#             BUILD_DIR="/root/Naukometria_Flask"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        id: main
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            REPO_DIR="/root/sciencemetrics-front"
+            GITHUB_MIRROR_DIR="/root/sciencemetrics-front.git"
+            BUILD_DIR="/root/Naukometria_Flask"
 
-#             echo "diff=false" > /tmp/gitlab_diff.txt
+            echo "diff=false" > /tmp/gitlab_diff.txt
 
-#             cd /root || exit
+            cd /root || exit
+            
+            # CLONE MIRROR - отключено
+            #if [ ! -d "$GITHUB_MIRROR_DIR" ]; then
+            #  git clone --mirror https://github.com/Redegit/sciencemetrics-front.git "$GITHUB_MIRROR_DIR"
+            #  cd "$GITHUB_MIRROR_DIR"
+            # git remote add gitlab https://devops.fa.ru/crpo/sci-metric.git
+            # else
+            #   cd "$GITHUB_MIRROR_DIR"
+            #   git remote update
 
-#             # CLONE MIRROR
-#             if [ ! -d "$GITHUB_MIRROR_DIR" ]; then
-#               git clone --mirror https://github.com/Redegit/sciencemetrics-front.git "$GITHUB_MIRROR_DIR"
-#               cd "$GITHUB_MIRROR_DIR"
-#               git remote add gitlab https://devops.fa.ru/crpo/sci-metric.git
-#             else
-#               cd "$GITHUB_MIRROR_DIR"
-#               git remote update
+            #   git fetch origin
+            #   git fetch gitlab
 
-#               git fetch origin
-#               git fetch gitlab
+            #   git push --mirror gitlab
 
-#               git push --mirror gitlab
+            #   if git show-ref -q refs/heads/dev && git show-ref -q refs/remotes/gitlab/dev; then
+            #     echo "git show-ref proceed"
+            #     DIFF=$(git diff refs/heads/dev refs/remotes/gitlab/dev)
+            #     if [ "$DIFF" ]; then
+            #       echo "DIFF is true"
+            #       echo "diff=true" > /tmp/gitlab_diff.txt
+            #     fi
+            #   else
+            #     echo "One of the refs is missing, assuming changes."
+            #     echo "diff=true" > /tmp/gitlab_diff.txt
+            #   fi
+            # fi
 
-#               if git show-ref -q refs/heads/dev && git show-ref -q refs/remotes/gitlab/dev; then
-#                 echo "git show-ref proceed"
-#                 DIFF=$(git diff refs/heads/dev refs/remotes/gitlab/dev)
-#                 if [ "$DIFF" ]; then
-#                   echo "DIFF is true"
-#                   echo "diff=true" > /tmp/gitlab_diff.txt
-#                 fi
-#               else
-#                 echo "One of the refs is missing, assuming changes."
-#                 echo "diff=true" > /tmp/gitlab_diff.txt
-#               fi
-#             fi
+            # CLONE REPO
+            if [ ! -d "$REPO_DIR" ]; then
+              git clone https://github.com/Redegit/sciencemetrics-front.git
+              cd "$REPO_DIR"
+              git checkout dev
+            else
+              cd "$REPO_DIR"
+              git checkout dev
+              git pull
+            fi
 
-#             # CLONE REPO
-#             if [ ! -d "$REPO_DIR" ]; then
-#               git clone https://github.com/Redegit/sciencemetrics-front.git
-#               cd "$REPO_DIR"
-#               git checkout dev
-#             else
-#               cd "$REPO_DIR"
-#               git checkout dev
-#               git pull
-#             fi
+            # BUILD
+            npm ci
+            npm run build
 
-#             # BUILD
-#             npm ci
-#             npm run build
+            rm -rf "$BUILD_DIR/dist"
+            cp -r dist "$BUILD_DIR/"
 
-#             rm -rf "$BUILD_DIR/dist"
-#             cp -r dist "$BUILD_DIR/"
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-#       - name: Setup SSH key
-#         run: |
-#           mkdir -p ~/.ssh
-#           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-#           chmod 600 ~/.ssh/id_rsa
-#           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Read diff status
+        id: check
+        run: |
+          echo "Checking DIFF from file..."
+          DIFF=$(ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cat /tmp/gitlab_diff.txt || echo "diff=false"')
+          echo "Diff is $DIFF"
+          echo "diff=$DIFF" >> $GITHUB_OUTPUT
 
-#       - name: Read diff status
-#         id: check
-#         run: |
-#           echo "Checking DIFF from file..."
-#           DIFF=$(ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cat /tmp/gitlab_diff.txt || echo "diff=false"')
-#           echo "Diff is $DIFF"
-#           echo "diff=$DIFF" >> $GITHUB_OUTPUT
+      - name: Create issue if conflict
+        if: steps.check.outputs.diff == 'true'
+        uses: JasonEtco/create-an-issue@v2
 
-#       - name: Create issue if conflict
-#         if: steps.check.outputs.diff == 'true'
-#         uses: JasonEtco/create-an-issue@v2
-
-#         with:
-#           title: "GitLab has diverged from GitHub"
-#           body: |
-#             Push to GitLab was made, but repos are not same.
-#             Please resolve manually.
+        with:
+          title: "GitLab has diverged from GitHub"
+          body: |
+            Push to GitLab was made, but repos are not same.
+            Please resolve manually.
