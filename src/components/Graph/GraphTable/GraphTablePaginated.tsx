@@ -119,21 +119,27 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   return (
     <div className={styles.pagination_container}>
-      <button
-        className={`${styles.page_button} ${page === 1 ? styles.disabled : ""}`}
-        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-        disabled={page === 1}
-      >
-        Назад
-      </button>
-      <span className={styles.page_number}>{page}</span>
-      <button
-        className={`${styles.page_button} ${!hasMore ? styles.disabled : ""}`}
-        onClick={() => setPage((prev) => prev + 1)}
-        disabled={!hasMore}
-      >
-        Вперед
-      </button>
+      <div className={styles.button_group}>
+        <button
+          className={`${styles.page_button} ${
+            page === 1 ? styles.disabled : ""
+          }`}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
+          Назад
+        </button>
+        <div className={styles.page_number}>
+          <span>{page}</span>
+        </div>
+        <button
+          className={`${styles.page_button} ${!hasMore ? styles.disabled : ""}`}
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={!hasMore}
+        >
+          Вперед
+        </button>
+      </div>
     </div>
   );
 };

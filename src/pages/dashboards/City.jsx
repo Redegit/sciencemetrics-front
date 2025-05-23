@@ -141,6 +141,25 @@ export const CITY = () => {
           selectedMode: "single",
         },
       ],
+      media: [
+        {
+          query: {
+            maxWidth: 700,
+          },
+          option: {
+            legend: {
+              orient: "horizontal",
+              bottom: 0,
+              top: void 0,
+              right: void 0,
+              left: "center",
+            },
+            series: {
+              center: ["50%", "50%"], 
+            },
+          },
+        },
+      ],
     };
 
     chartInstance.current.setOption(option);

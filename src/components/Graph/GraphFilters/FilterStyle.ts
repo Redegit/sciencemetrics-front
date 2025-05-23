@@ -14,6 +14,9 @@ export const filtersBootstrapLikeStyle: StylesConfig = {
     minHeight: "calc(1.5em + 0.75rem + 2px)",
     paddingLeft: "0.375rem",
     paddingRight: "0.375rem",
+    ">div:first-child": {
+      flexWrap: "nowrap"
+    }
   }),
   valueContainer: (base) => ({
     ...base,

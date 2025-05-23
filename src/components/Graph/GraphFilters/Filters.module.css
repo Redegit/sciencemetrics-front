@@ -17,6 +17,12 @@
       min-width: var(--filter-min-width, auto);
       grid-column: var(--filter-column, auto);
     }
+
+    @media screen and (max-width: 750px) {
+      .filters__item {
+        grid-column: 1;
+      }
+    }
   }
 
   .filters__buttons {
