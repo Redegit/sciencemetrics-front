@@ -38,7 +38,8 @@ export const LoginPage = () => {
         id="background-video"
         className="video-bg"
         preload="auto"
-        poster="/assets/finuni-poster.jpg"
+        playsInline
+        poster="/assets/finuni-poster.png"
       >
         <source src="/assets/finuni.webm" type="video/webm" />
       </video>
@@ -52,7 +53,10 @@ export const LoginPage = () => {
               </div>
 
               {location.state?.from && (
-                <div className="auth-required__message" style={{textAlign: "center"}}>
+                <div
+                  className="auth-required__message"
+                  style={{ textAlign: "center" }}
+                >
                   Сперва необходимо авторизоваться
                 </div>
               )}
@@ -99,7 +103,11 @@ export const LoginPage = () => {
               </div>
 
               {error && (
-                <div id="passwordError" className="error-message" style={{textAlign: "center"}}>
+                <div
+                  id="passwordError"
+                  className="error-message"
+                  style={{ textAlign: "center" }}
+                >
                   {error}
                 </div>
               )}
