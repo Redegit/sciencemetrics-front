@@ -7,7 +7,7 @@ export const FluidBackground = React.memo(() => {
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "/fluid.js";
+    script.src = "/assets/fluid.js";
     script.async = true;
 
     script.onload = () => {
