@@ -112,7 +112,7 @@ body {
   letter-spacing: normal;
   text-align: left;
   overflow-y: scroll;
-  background-color: var(--app-bg);
+  // background-color: var(--app-bg);
 
   #root {
     margin-inline: auto;
@@ -126,6 +126,10 @@ body {
       padding-bottom: 2rem;
       display: flex;
       flex-direction: column;
+
+      &>* {
+        z-index: 1;
+      }
 
       .main {
         display: flex;
