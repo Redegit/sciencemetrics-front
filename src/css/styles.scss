@@ -4,10 +4,20 @@
 
   /* font sizes */
   --font-size-base: 16px;
+  --font-size-xs: 0.75rem;
+  --font-size-mini: 0.9rem;
+  --font-size-5xl: 1.5rem;
+  --font-size-sm: 0.875rem;
+  --bold-18-size: 1.125rem;
+  --bold-13-size: 0.8125rem;
+  --font-size-lgi: 1.1875rem;
+  --font-size-3xs: 0.625rem;
+
   --font-size-xs: 12px;
   --font-size-mini: 15px;
   --font-size-5xl: 24px;
   --font-size-sm: 14px;
+  --font-size-16: 16px;
   --bold-18-size: 18px;
   --bold-13-size: 13px;
   --font-size-lgi: 19px;
@@ -78,6 +88,8 @@
   --br-10xl-9: 29.9px;
   --br-81xl: 100px;
   --br-6xs: 7px;
+
+  font-size: var(--font-size-base);
 }
 
 *,
@@ -92,7 +104,6 @@
 body {
   color: var(--text-color);
   font-family: var(--font-inter), sans-serif !important;
-  font-size: var(--font-size-base);
   height: 100%;
   width: 100%;
   min-height: 100svh;
@@ -109,7 +120,7 @@ body {
     min-height: 100svh;
 
     .App {
-      font-size: 16px;
+      font-size: var(--font-size-base);
       width: 100%;
       min-height: 100svh;
       padding-bottom: 2rem;
@@ -133,10 +144,47 @@ body {
 
           display: flex;
           flex-direction: column;
-          gap: 1em;
+          gap: 1rem;
         }
       }
     }
+  }
+}
+
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  :root {
+    font-size: var(--font-size-xs);
+  }
+  body {
+    #root {
+      .App {
+        .main {
+          // padding-inline: 0;
+
+          .custom-container {
+            padding: 0;
+            border-radius: 0;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
   }
 }
 
@@ -149,7 +197,7 @@ select {
   -webkit-appearance: auto;
   -moz-appearance: auto;
   padding: 8px 12px;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   border: 1px solid var(--color-gainsboro-100);
   border-radius: 8px;
   background-color: white;

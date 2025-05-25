@@ -6,7 +6,7 @@
 
 .graph__table {
   thead {
-    background-color: var(--table-head-color);
+    background-color: var(--blue-light-color);
   }
   tbody {
     tr {
@@ -14,7 +14,7 @@
       background-color: var(--app-bg) !important;
     }
     tr:hover {
-      background-color: var(--table-head-color) !important;
+      background-color: var(--blue-light-color) !important;
     }
   }
 }
@@ -41,7 +41,7 @@
   border-top: none;
   border-bottom: none;
   background-color: var(--app-bg);
-  font-size: 14px;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -64,6 +64,6 @@
 }
 
 .page_number {
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: bold;
 }

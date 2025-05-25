@@ -20,7 +20,7 @@
       label {
         font-weight: 500;
         color: var(--text-color);
-        font-size: var(--font-size-sm);
+        font-size: 1rem;
         margin: 0;
       }
 
@@ -28,7 +28,7 @@
         --gap: 0.5em;
         --select-padding-inline: 8px;
         --select-padding-block: 12px;
-        --clear-btn-size: 0.8em;
+        --clear-btn-size: 0.8rem;
         position: relative;
         flex-grow: 1;
         max-width: 400px;
@@ -42,7 +42,7 @@
           border: 1px solid #cbd5e0;
           border-radius: 6px;
           background: #ffffff;
-          font-size: 14px;
+          font-size: 1rem;
           appearance: none;
           transition: border-color 0.2s;
 

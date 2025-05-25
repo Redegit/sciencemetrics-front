@@ -27,11 +27,11 @@
 
   .filters__buttons {
     button {
-      border-color: var(--accent-dark-color);
+      border-color: var(--secondary-light-color);
     }
 
     button[type="submit"] {
-      background-color: var(--accent-light-color);
+      background-color: var(--secondary-light-color);
     }
   }
 }

@@ -329,7 +329,7 @@ export const Error503 = () => {
             padding: 0.75em 2em;
             background-color: #528cce;
             color: #ffffff;
-            font-size: 14px;
+            font-size: var(--font-size-sm);
           }
         }
       `}</style>

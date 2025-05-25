@@ -378,35 +378,36 @@ export const MAPS = () => {
                 })()}
               </Map>
             </YMaps>
+
+            {selectedConnection && (
+                <div className="connection-panel">
+                  <div className="panel-header">
+                    <h3>
+                      {selectedConnection.cityA} ↔ {selectedConnection.cityB}
+                      <button
+                          onClick={() => setSelectedConnection(null)}
+                          className="close-btn"
+                      >
+                        &times;
+                      </button>
+                    </h3>
+                  </div>
+                  <div className="connection-details">
+                    <p>
+                      <strong>Совместных публикаций: </strong>
+                      {formatNumber(selectedConnection.weight)}
+                    </p>
+                    {selectedKeyword && (
+                        <p>
+                          <strong>Ключевое слово:</strong>
+                          {selectedKeyword}
+                        </p>
+                    )}
+                  </div>
+                </div>
+            )}
           </div>
 
-          {selectedConnection && (
-              <div className="connection-panel">
-                <div className="panel-header">
-                  <h3>
-                    {selectedConnection.cityA} ↔ {selectedConnection.cityB}
-                    <button
-                        onClick={() => setSelectedConnection(null)}
-                        className="close-btn"
-                    >
-                      &times;
-                    </button>
-                  </h3>
-                </div>
-                <div className="connection-details">
-                  <p>
-                    <strong>Совместных публикаций: </strong>
-                    {formatNumber(selectedConnection.weight)}
-                  </p>
-                  {selectedKeyword && (
-                      <p>
-                        <strong>Ключевое слово:</strong>
-                        {selectedKeyword}
-                      </p>
-                  )}
-                </div>
-              </div>
-          )}
 
           {activeCity && (
             <div className="organizations-panel">
