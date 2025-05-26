@@ -1688,15 +1688,10 @@ function correctRadius(radius) {
 
 window.addEventListener("mousemove", (e) => {
   let pointer = pointers[0];
-  console.log(e);
-  
-  //   let posX = scaleByPixelRatio(e.offsetX);
-  //   let posY = scaleByPixelRatio(e.offsetY);
-  let posX = scaleByPixelRatio(e.pageX);
-  let posY = scaleByPixelRatio(e.pageY);
 
-  console.log(posX, posY);
-  
+  const rect = canvas.getBoundingClientRect();
+  const posX = (e.clientX - rect.left) * devicePixelRatio;
+  const posY = (e.clientY - rect.top) * devicePixelRatio;
 
   if (!pointer.down) {
     updatePointerDownData(pointer, -1, posX, posY);
