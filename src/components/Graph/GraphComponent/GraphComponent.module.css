@@ -1,9 +1,11 @@
 .graph_container {
     width: 100%;
+    height: 100%;
 }
 
 .graph_container__position {
     position: relative;
+    height: 100%;
     width: 100%;
 }
 
