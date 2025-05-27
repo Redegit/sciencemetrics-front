@@ -68,7 +68,7 @@ export const GraphTablePaginated = React.memo(
     return (
       <div className={styles.graph_table__container}>
         <>
-          <Table striped bordered hover className={styles.graph__table}>
+          <Table striped hover className={styles.graph__table}>
             <thead>
               <tr>
                 {tablesOptions[clickedItem.type]?.columns.map((column) => (

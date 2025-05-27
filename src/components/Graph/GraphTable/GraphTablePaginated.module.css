@@ -1,7 +1,7 @@
 .graph_table__container {
   transition: height 0.3s ease-in-out;
   overflow: auto;
-  padding: 1em;
+  padding-bottom: 1em;
 }
 
 .graph__table {
@@ -11,7 +11,8 @@
   tbody {
     tr {
       cursor: pointer;
-      background-color: var(--app-bg) !important;
+      background-color: transparent !important;
+      transition: background-color 0.3s ease-in-out;
     }
     tr:hover {
       background-color: var(--blue-light-color) !important;

@@ -203,7 +203,7 @@ export const GraphLayout = React.memo<Props>(
           <ReactECharts
             ref={chartRef}
             option={option}
-            style={{ minHeight: "600px", height: "100%", width: "100%" }}
+            style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
           />
         </div>
