@@ -8,3 +8,94 @@
   pointer-events: auto;
   opacity: 0.3;
 }
+
+#fluid-canvas--toggle {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 1001 !important;
+
+  width: 3rem;
+  height: 3rem;
+
+  border: none;
+  border-radius: 50% 0 0 0;
+  outline: none;
+
+  margin: 0;
+  padding: 0.2rem;
+
+  background-color: var(--secondary-light-color);
+
+  transform-origin: 100% 100%;
+  transition: scale 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+  // opacity: 0;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    scale: 1.5;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--secondary-light-color);
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    animation: none;
+  }
+
+  &.clicked::after {
+    animation: pulse 0.6s ease-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.5);
+    }
+  }
+
+  svg {
+    --yellow-color: #ffff00;
+    width: 100%;
+    height: 100%;
+    transform: scale(-1, 1);
+    rotate: 351deg;
+
+    path {
+      stroke: var(--app-bg);
+
+      &.ray {
+        stroke: var(--yellow-color);
+        opacity: 1;
+      }
+
+      &.star {
+        stroke: var(--yellow-color);
+        opacity: 1;
+      }
+    }
+  }
+
+  &[data-toggled="false"] {
+    svg path {
+      &.ray {
+        display: none;
+      }
+
+      &.star {
+        opacity: 0.6;
+        stroke: var(--app-bg);
+      }
+    }
+  }
+}
