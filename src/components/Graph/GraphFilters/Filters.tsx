@@ -22,6 +22,8 @@ import {
 import "./Filters.scss";
 import styles from "./Filters.module.css";
 import { YearRangeSelect } from "./YearRangeSelect";
+import { FilterContextProvider } from "./FilterContext/FilterContextProvider";
+import { FilterLabel } from "./FilterLabel";
 
 type Props<T extends FilterConfig> = {
   filterItems: FilterItem<T>[];
@@ -51,81 +53,86 @@ export const Filters = React.memo(
                 ["--filter-min-width" as any]: filter.minWidth,
               }}
             >
-              <Form.Label>{filter.label}</Form.Label>
-              <Controller
-                name={filter.name as Path<FiltersForm<T>>}
-                control={control}
-                render={({ field }) => {
-                  switch (filter.filter_type) {
-                    case "select":
-                    case "multi-select":
-                      return (
-                        <SelectWithPagination
-                          isMulti={filter.filter_type === "multi-select"}
-                          name={field.name}
-                          placeholder={
-                            filter.filter_type === "multi-select"
-                              ? "Выберите несколько..."
-                              : "Выберите..."
-                          }
-                          closeMenuOnSelect={
-                            filter.filter_type !== "multi-select"
-                          }
-                          styles={filtersBootstrapLikeStyle}
-                          field={field}
-                          filter_api_url_search_n_pagination={
-                            filter.filter_api_url_search_n_pagination
-                          }
-                        />
-                      );
-                    case "input": {
-                      return (
-                        <Form.Control
-                          {...field}
-                          {...filter}
-                          type={
-                            (filter as InputFilterItem<typeof field.name>)
-                              .type ?? "text"
-                          }
-                          placeholder={
-                            (filter as InputFilterItem<typeof field.name>)
-                              .placeholder
-                          }
-                          className={styles.filtersItemInput}
-                          value={
-                            Array.isArray(field.value)
-                              ? field.value.join(", ")
-                              : String(field.value ?? "")
-                          }
-                        />
-                      );
-                    }
-                    case "year_range":
-                      return (
-                        <YearRangeSelect
-                          minYear={
-                            (filter as YearRangeFilterItem<typeof field.name>)
-                              .min
-                          }
-                          maxYear={
-                            (filter as YearRangeFilterItem<typeof field.name>)
-                              .max
-                          }
-                          field={
-                            field as ControllerRenderProps<
-                              FiltersForm<T>,
-                              Path<FiltersForm<T>>
-                            > & {
-                              value: YearRange | undefined;
+              <FilterContextProvider>
+                <FilterLabel
+                  label={filter.label}
+                  className={styles.filtersFormLabel}
+                />
+                <Controller
+                  name={filter.name as Path<FiltersForm<T>>}
+                  control={control}
+                  render={({ field }) => {
+                    switch (filter.filter_type) {
+                      case "select":
+                      case "multi-select":
+                        return (
+                          <SelectWithPagination
+                            isMulti={filter.filter_type === "multi-select"}
+                            name={field.name}
+                            placeholder={
+                              filter.filter_type === "multi-select"
+                                ? "Выберите несколько..."
+                                : "Выберите..."
                             }
-                          }
-                        />
-                      );
-                    default:
-                      return <></>;
-                  }
-                }}
-              />
+                            closeMenuOnSelect={
+                              filter.filter_type !== "multi-select"
+                            }
+                            styles={filtersBootstrapLikeStyle}
+                            field={field}
+                            filter_api_url_search_n_pagination={
+                              filter.filter_api_url_search_n_pagination
+                            }
+                          />
+                        );
+                      case "input": {
+                        return (
+                          <Form.Control
+                            {...field}
+                            {...filter}
+                            type={
+                              (filter as InputFilterItem<typeof field.name>)
+                                .type ?? "text"
+                            }
+                            placeholder={
+                              (filter as InputFilterItem<typeof field.name>)
+                                .placeholder
+                            }
+                            className={styles.filtersItemInput}
+                            value={
+                              Array.isArray(field.value)
+                                ? field.value.join(", ")
+                                : String(field.value ?? "")
+                            }
+                          />
+                        );
+                      }
+                      case "year_range":
+                        return (
+                          <YearRangeSelect
+                            minYear={
+                              (filter as YearRangeFilterItem<typeof field.name>)
+                                .min
+                            }
+                            maxYear={
+                              (filter as YearRangeFilterItem<typeof field.name>)
+                                .max
+                            }
+                            field={
+                              field as ControllerRenderProps<
+                                FiltersForm<T>,
+                                Path<FiltersForm<T>>
+                              > & {
+                                value: YearRange | undefined;
+                              }
+                            }
+                          />
+                        );
+                      default:
+                        return <></>;
+                    }
+                  }}
+                />
+              </FilterContextProvider>
             </Form.Group>
           ))}
         </Stack>
@@ -134,9 +141,7 @@ export const Filters = React.memo(
           <Button variant="outline-secondary" onClick={onReset} type="button">
             Сбросить
           </Button>
-          <Button type="submit">
-            Применить
-          </Button>
+          <Button type="submit">Применить</Button>
         </ButtonGroup>
       </Form>
     );

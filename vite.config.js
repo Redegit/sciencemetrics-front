@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   server: {
     port: 3000,
+    host: true,
   },
   plugins: [react()],
   css: {
@@ -17,7 +18,7 @@ export default defineConfig({
     __USE_FULL_PATH__: process.argv.includes("--full-path"),
   },
   build: {
-    minify: 'terser',
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,

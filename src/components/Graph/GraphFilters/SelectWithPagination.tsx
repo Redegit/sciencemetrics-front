@@ -5,6 +5,7 @@ import Select from "react-select";
 import { SelectOption, FilterConfig, FiltersForm } from "../../../types";
 import { getFiltersData } from "../../../api/getFilterData";
 import { AsyncPaginate } from "react-select-async-paginate";
+import { useFilterContext } from "./FilterContext/useFilterContext";
 
 type Props<T extends FilterConfig> = Omit<
   React.ComponentProps<typeof Select>,
@@ -22,6 +23,8 @@ export const SelectWithPagination = React.memo(
     ...props
   }: Props<T>) => {
     const [error, setError] = useState<boolean>(false);
+    const { onBlur, onFocus } = useFilterContext();
+
     const loadOptions = async (
       search: string,
       _: unknown, // loadedOptions
@@ -73,7 +76,10 @@ export const SelectWithPagination = React.memo(
     return (
       <AsyncPaginate
         {...props}
+        classNamePrefix={"filter_select"}
         isClearable
+        onFocus={onFocus}
+        onBlur={onBlur}
         loadOptions={loadOptions}
         loadingMessage={() => "Загрузка..."}
         debounceTimeout={500}

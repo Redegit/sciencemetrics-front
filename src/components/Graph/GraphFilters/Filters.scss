@@ -9,11 +9,7 @@
   border-radius: 0.375rem;
   border-style: solid;
   border-width: 1px;
-
-  &:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  }
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &:hover {
     border-color: #86b7fe;
@@ -21,10 +17,12 @@
 
   .year_select__control {
     border: none;
+    cursor: pointer;
   }
 
   .year_select__control--is-focused {
     z-index: 1;
+    box-shadow: none;
   }
 
   .year_select__indicators {
@@ -44,4 +42,9 @@
       background-color: var(--border-color);
     }
   }
+}
+
+.year_select__container:has(.year_select__control--is-focused) {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
