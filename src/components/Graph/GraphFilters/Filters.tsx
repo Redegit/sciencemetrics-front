@@ -41,11 +41,11 @@ export const Filters = React.memo(
   }: Props<T>) => {
     return (
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.filters}>
-        <Stack className={styles.filters__list}>
+        <Stack className={styles.filtersList}>
           {filterItems.map((filter) => (
             <Form.Group
               key={filter.name}
-              className={styles.filters__item}
+              className={styles.filtersItem}
               style={{
                 ["--filter-column" as any]: filter.column,
                 ["--filter-min-width" as any]: filter.minWidth,
@@ -91,6 +91,7 @@ export const Filters = React.memo(
                             (filter as InputFilterItem<typeof field.name>)
                               .placeholder
                           }
+                          className={styles.filtersItemInput}
                           value={
                             Array.isArray(field.value)
                               ? field.value.join(", ")
@@ -129,7 +130,7 @@ export const Filters = React.memo(
           ))}
         </Stack>
 
-        <ButtonGroup className={styles.filters__buttons}>
+        <ButtonGroup className={styles.filtersButtons}>
           <Button variant="outline-secondary" onClick={onReset} type="button">
             Сбросить
           </Button>

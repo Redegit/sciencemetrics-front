@@ -10,6 +10,7 @@ export const filtersBootstrapLikeStyle: StylesConfig = {
     "&:hover": {
       borderColor: "#86b7fe",
     },
+    fontSize: "1rem",
     borderRadius: "0.375rem",
     minHeight: "calc(1.5em + 0.75rem + 2px)",
     paddingLeft: "0.375rem",

@@ -165,7 +165,7 @@ body {
 
 @media screen and (max-width: 900px) {
   :root {
-    font-size: var(--font-size-xs);
+    --font-size-base: 12px;
   }
   body {
     #root {

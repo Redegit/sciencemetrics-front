@@ -34,6 +34,7 @@ export const ORGS = React.memo(() => {
     {
       name: "min_publications",
       label: "Минимум публикаций",
+      placeholder: "Введите число",
       filter_type: "input",
       type: "number",
       min: 1,
