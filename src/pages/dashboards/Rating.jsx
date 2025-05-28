@@ -32,8 +32,9 @@ const BarChart = ({ data, title, xAxisName, yAxisName, color }) => {
         },
       },
       tooltip: {
-        trigger: "axis",
+        extraCssText: "width:auto; white-space:pre-wrap;",
         confine: true,
+        trigger: "axis",
         axisPointer: { type: "shadow" },
         formatter: "{b}: {c}",
       },

@@ -14,6 +14,8 @@ const EchartsWordCloud = ({ data, year }) => {
 
     const options = {
       tooltip: {
+        extraCssText: "width:auto; white-space:pre-wrap;",
+        confine: true,
         show: true,
         formatter: (params) => {
           return `${params.data.name}: ${params.data.value} упоминаний`;

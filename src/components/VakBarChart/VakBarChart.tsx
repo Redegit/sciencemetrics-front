@@ -10,13 +10,17 @@ export const VakBarChart = React.memo<Props>(({ data }) => {
   const specializations = Object.keys(data) as Array<keyof VakChartData>;
 
   const categoryColors: Record<VakCategory, string> = {
-    "К1": "rgba(75,211,150,0.93)",
-    "К2": "rgba(42,127,181,0.93)",
-    "К3": "rgba(243,80,35,0.93)"
+    К1: "rgba(75,211,150,0.93)",
+    К2: "rgba(42,127,181,0.93)",
+    К3: "rgba(243,80,35,0.93)",
   };
-  
+
   const option = {
-    tooltip: { trigger: "axis", confine: true },
+    tooltip: {
+      extraCssText: "width:auto; white-space:pre-wrap;",
+      confine: true,
+      trigger: "axis",
+    },
     legend: { data: keys.reverse() },
     xAxis: {
       type: "category",
@@ -47,7 +51,7 @@ export const VakBarChart = React.memo<Props>(({ data }) => {
       },
       itemStyle: {
         color: categoryColors[key],
-      },    
+      },
       data: specializations.map((spec) => data[spec][key]),
     })),
     dataZoom: [

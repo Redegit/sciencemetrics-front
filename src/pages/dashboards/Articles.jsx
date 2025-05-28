@@ -59,6 +59,8 @@ export const ARTICLES = () => {
         containLabel: true,
       },
       tooltip: {
+        extraCssText: "width:auto; white-space:pre-wrap;",
+        confine: true,
         trigger: "axis",
         formatter: ({ 0: { name, value } }) => {
           const word = declinateArticles(value);

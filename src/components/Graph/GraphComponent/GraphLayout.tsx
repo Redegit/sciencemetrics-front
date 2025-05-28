@@ -46,6 +46,8 @@ export const GraphLayout = React.memo<Props>(
         },
       },
       tooltip: {
+        extraCssText: "width:auto; white-space:pre-wrap;",
+        confine: true,
         trigger: "item",
         formatter: function (params: echarts.ECElementEvent) {
           if (params.dataType === "node") {
