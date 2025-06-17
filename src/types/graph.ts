@@ -21,17 +21,44 @@ export type GraphNode = {
   aliases: string[];
 };
 
+export type ECLineStyle = {
+  color?: string;
+  width?: number;
+  type?: string;
+  dashOffset?: number;
+  cap?: string;
+  join?: string;
+  miterLimit?: number;
+  shadowBlur?: number;
+  shadowColor?: string;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  opacity?: number;
+  curveness?: number;
+};
+
 export type GraphLink = {
   source: string;
   target: string;
   weight?: number;
-  itemStyle?: ItemStyle;
+  lineStyle?: ECLineStyle;
 };
 
 export type ItemStyle = {
   color?: string;
-  opacity?: number;
+  borderColor?: string;
   borderRadius?: (number | string)[] | number | string;
+  borderType: "solid" | "dashed" | "dotted";
+  borderWidth?: number;
+  borderDashOffset?: number;
+  borderCap?: "butt" | "round" | "square";
+  borderJoin?: "bevel" | "round" | "miter";
+  borderMiterLimit?: number;
+  shadowBlur?: number;
+  shadowColor?: string;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  opacity?: number;
 };
 
 type GraphTitle = {

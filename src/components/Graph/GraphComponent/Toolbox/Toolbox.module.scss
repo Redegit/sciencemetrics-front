@@ -1,0 +1,67 @@
+.toolbox {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  isolation: isolate;
+
+  &__toggle {
+    padding: 6px 12px;
+    font-size: 14px;
+    color: var(--text-color);
+    background: var(--app-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    cursor: pointer;
+  }
+
+  &__arrow {
+    margin-left: 6px;
+    height: 1lh;
+    width: 1lh;
+    display: inline;
+    stroke: var(--text-color);
+    fill: var(--text-color);
+  }
+
+  &__menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--app-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px var(--box-shadow);
+    z-index: 10;
+    padding: 8px 0;
+    min-width: 200px;
+    max-width: 90dvw;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--blue-light-color);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 4px 0;
+  }
+}

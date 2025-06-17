@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import {
   ClickedItem,
@@ -15,19 +15,29 @@ import { GraphZoomControls } from "./GraphZoomControls";
 import React from "react";
 import { getPublicationsWord } from "../../../utils/getPublicationsWord";
 import { GraphTablePaginated } from "../GraphTable/GraphTablePaginated";
+import { GraphTools } from "./graphTools";
+import { Toolbox } from "./Toolbox/Toolbox";
 
 type Props = {
   options?: GraphOptions;
   graphData: GraphData;
   graphTables?: GraphTables;
+  toggleShowZeroCategoryCommonLinks?: () => void;
 };
 
 export const GraphLayout = React.memo<Props>(
-  ({ graphData, options, graphTables }) => {
+  ({ graphData, options, graphTables, toggleShowZeroCategoryCommonLinks }) => {
     const chartRef = useRef<ReactECharts>(null);
+    const [showZeroLinks, setShowZeroLinks] = useState(false);
+    const [layoutAnimation, setLayoutAnimation] = useState(true);
+    const [fullscreen, setFullscreen] = useState(false);
+
     const [clickedItem, setClickedItem] = React.useState<ClickedItem<
       "node" | "link"
     > | null>(null);
+
+    const tools = React.useMemo(() => new GraphTools(chartRef), [chartRef]);
+
     const { nodes, links, categories, title, name } = graphData;
 
     const getNodeColor = (node: GraphNode) => {
@@ -90,13 +100,6 @@ export const GraphLayout = React.memo<Props>(
               bottom: 20,
             }
           : undefined,
-      toolbox: {
-        show: true,
-        feature: {
-          restore: {},
-          saveAsImage: {},
-        },
-      },
       series: [
         {
           name: name,
@@ -106,7 +109,8 @@ export const GraphLayout = React.memo<Props>(
             ...node,
             itemStyle: {
               color: getNodeColor(node),
-              opacity: 0.9,
+              borderWidth: 2,
+              borderColor: "#eaf5ff",
             },
           })),
           edgeSymbol: options?.edgeSymbol,
@@ -117,14 +121,20 @@ export const GraphLayout = React.memo<Props>(
             show: true,
             position: "right",
             fontSize: 10,
-            // fontWeight: "bold",
             color: "#333",
+            textShadowColor: "#fff",
+            textShadowBlur: 2,
+            textBorderColor: "#fff",
+            textBorderWidth: 2,
             formatter: (params: { data: { name: string } }) => params.data.name,
           },
           force: {
-            repulsion: 100,
-            gravity: 0.1,
-            edgeLength: 100,
+            repulsion: 200,
+            gravity: 0.05,
+            friction: 0.1,
+            edgeLength: [20, 200],
+            // edgeLength: null,
+            initLayout: null,
           },
           lineStyle: {
             width: 2,
@@ -133,17 +143,22 @@ export const GraphLayout = React.memo<Props>(
           },
           emphasis: {
             focus: "adjacency",
-            lineStyle: {
-              width: 4,
-              color: "#284e9d",
-            },
           },
         },
       ],
     };
 
+    useEffect(() => {
+      if (chartRef.current) {
+        const tools = new GraphTools(chartRef);
+        tools.setPhysics(true);
+      }
+    }, []);
+
     const handleNodeClick = useCallback(
       (data: GraphNode) => {
+        console.log(data);
+
         const nodeId = data.id;
         if (graphTables?.node && nodeId !== undefined) {
           setClickedItem({
@@ -159,6 +174,8 @@ export const GraphLayout = React.memo<Props>(
 
     const handleLinkClick = useCallback(
       (data: GraphLink) => {
+        console.log(data);
+
         const { source, target } = data;
         if (graphTables?.node && target && source) {
           setClickedItem({
@@ -198,10 +215,76 @@ export const GraphLayout = React.memo<Props>(
       };
     }, [handleGraphClick]);
 
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setFullscreen(false);
+      };
+
+      if (fullscreen) {
+        window.addEventListener("keydown", handleKeyDown);
+      }
+
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [fullscreen]);
+
+    useEffect(() => {
+      tools.setPhysics(layoutAnimation);
+    }, [tools, layoutAnimation]);
+
     return (
       <div className={styles.graph_container}>
-        <div className={styles.graph_container__position}>
+        <div
+          className={styles.graph_container__position}
+          data-fullscreen={fullscreen}
+        >
           <GraphZoomControls chartRef={chartRef} />
+          <Toolbox
+            buttons={[
+              {
+                label: "Сбросить граф",
+                onClick: () => {
+                  setLayoutAnimation(true);
+                  tools.reset();
+                },
+                icon: "refresh",
+              },
+              {
+                label: "Скачать PNG",
+                onClick: tools.saveAsImage,
+                icon: "download",
+              },
+              fullscreen
+                ? {
+                    label: "Свернуть",
+                    onClick: () => setFullscreen(false),
+                    icon: "fullscreenExit",
+                  }
+                : {
+                    label: "На весь экран",
+                    onClick: () => setFullscreen(true),
+                    icon: "fullscreenEnter",
+                  },
+            ]}
+            toggles={[
+              {
+                label: "Связи между синими узлами",
+                value: showZeroLinks,
+                onToggle: (v) => {
+                  setShowZeroLinks(v);
+                  toggleShowZeroCategoryCommonLinks?.();
+                },
+                // icon: "freeze",
+              },
+              {
+                label: "Заморозить симуляцию",
+                value: !layoutAnimation,
+                onToggle: (v) => setLayoutAnimation(!v),
+                // icon: "freeze",
+              },
+            ]}
+          />
           <ReactECharts
             ref={chartRef}
             option={option}

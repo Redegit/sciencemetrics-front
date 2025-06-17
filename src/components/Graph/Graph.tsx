@@ -1,4 +1,4 @@
-import React, { JSX, useCallback, useEffect, useState } from "react";
+import React, { JSX, useCallback, useEffect, useRef, useState } from "react";
 import type {
   Control,
   UseFormHandleSubmit,
@@ -11,13 +11,18 @@ import {
   FilterItem,
   FiltersForm,
   GraphData,
+  GraphNode,
   GraphOptions,
   GraphTables,
 } from "../../types";
 import { Filters } from "./GraphFilters/Filters";
 import { GraphLayout } from "./GraphComponent/GraphLayout";
 import { WarningModal } from "./GraphComponent/WarningModal";
-import { transformGraphApiData } from "../../utils/transformGraphApiData";
+import {
+  NodesCategoryMap,
+  TransformedData,
+  transformGraphApiData,
+} from "../../utils/transformGraphApiData";
 import { Dashboard } from "../../hoc/Dashboard";
 import { Placeholder } from "../Placeholder/Placeholder";
 
@@ -29,6 +34,7 @@ type Props<T extends FilterConfig> = {
   handleSubmit: UseFormHandleSubmit<FiltersForm<T>, FiltersForm<T>>;
   options?: GraphOptions;
   graphTables?: GraphTables;
+  mockData?: ApiGraphData;
 };
 
 export type GraphStatus = "loading" | "error" | "success" | "filtersEmpty";
@@ -43,8 +49,14 @@ export const Graph = React.memo(
     handleSubmit,
     options,
     graphTables,
+    mockData,
   }: Props<T>) => {
     const [graphData, setGraphData] = useState<GraphData | null>(null);
+    const [nodesCategoryMap, setNodesCategoryMap] = useState<NodesCategoryMap>(
+      new Map()
+    );
+    const [graphDataFiltered, setGraphDataFiltered] =
+      useState<GraphData | null>(null);
     const [filtersKey, setFiltersKey] = useState(0);
     const [showWarningModal, setShowWarningModal] = useState(false);
 
@@ -53,6 +65,14 @@ export const Graph = React.memo(
 
     const [pendingGraphData, setPendingGraphData] =
       useState<ApiGraphData | null>(null);
+
+    const [showZeroCategoryCommonLinks, setShowZeroCategoryCommonLinks] =
+      useState(false);
+
+    const setData = (data: TransformedData) => {
+      setGraphData(data.graphData);
+      setNodesCategoryMap(data.nodesCategoryMap);
+    };
 
     const fetchGraphData = useCallback(
       async (filterParams: FiltersForm<T>) => {
@@ -71,8 +91,8 @@ export const Graph = React.memo(
             setErrorMessage("Похоже, что по вашим фильтрам ничего не найдено");
             return;
           }
-          const graphData = transformGraphApiData(apiData);
-          setGraphData(graphData);
+          const data = transformGraphApiData(apiData);
+          setData(data);
           setStatus("success");
         } catch (err) {
           console.error("Ошибка при загрузке данных графа:", err);
@@ -124,7 +144,7 @@ export const Graph = React.memo(
       (confirmed: boolean) => {
         setShowWarningModal(false);
         if (confirmed && pendingGraphData) {
-          setGraphData(transformGraphApiData(pendingGraphData));
+          setData(transformGraphApiData(pendingGraphData));
         } else {
           resetStates();
         }
@@ -133,7 +153,38 @@ export const Graph = React.memo(
       [pendingGraphData, resetStates]
     );
 
+    const toggleGraphLinksCategory = useCallback(() => {
+      if (!graphData) {
+        return;
+      }
+
+      if (showZeroCategoryCommonLinks) {
+        setGraphDataFiltered(graphData);
+      } else {
+        setGraphDataFiltered({
+          nodes: graphData.nodes,
+          links: graphData.links.filter((link) => {
+            return (
+              nodesCategoryMap.get(link.target) == 1 ||
+              nodesCategoryMap.get(link.source) == 1
+            );
+          }),
+          categories: graphData.categories,
+        });
+      }
+    }, [graphData, showZeroCategoryCommonLinks, nodesCategoryMap]);
+
     useEffect(() => {
+      toggleGraphLinksCategory();
+    }, [graphData, toggleGraphLinksCategory]);
+
+    useEffect(() => {
+      if (mockData) {
+        setData(transformGraphApiData(mockData));
+        setStatus("success");
+        console.log("Mock data used");
+        return;
+      }
       if (filters.length === 0) {
         fetchGraphData({} as FiltersForm<T>);
       }
@@ -156,14 +207,21 @@ export const Graph = React.memo(
         )}
 
         <Dashboard.Layout>
-          {status === "success" && graphData ? (
+          {status === "success" && graphDataFiltered ? (
             <GraphLayout
-              graphData={graphData}
+              graphData={graphDataFiltered}
               options={options}
               graphTables={graphTables}
+              toggleShowZeroCategoryCommonLinks={() =>
+                setShowZeroCategoryCommonLinks((state) => !state)
+              }
             />
           ) : (
-            <Placeholder status={status} errorMessage={errorMessage} fullheight />
+            <Placeholder
+              status={status}
+              errorMessage={errorMessage}
+              fullheight
+            />
           )}
         </Dashboard.Layout>
 

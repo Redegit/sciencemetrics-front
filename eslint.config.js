@@ -11,6 +11,9 @@ export default [
   {
     ignores: ["dist/**"],
     settings: {
+      react: {
+        version: "detect",
+      },
       "import/resolver": {
         node: {
           extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],

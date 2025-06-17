@@ -8,6 +8,7 @@ import {
   GraphTables,
 } from "../../types";
 import { request } from "../../api/request";
+// import { graphDataMock } from "../../mock";
 
 type AuthorsFilters = {
   authors: "multi-select";
@@ -116,6 +117,7 @@ export const AUTHORS = React.memo(() => {
 
   return (
       <Graph
+          // mockData={graphDataMock.authorsLarge}
           graphName="authors"
           graphTables={graphTables}
           {...{ control, handleSubmit, reset, filters }}

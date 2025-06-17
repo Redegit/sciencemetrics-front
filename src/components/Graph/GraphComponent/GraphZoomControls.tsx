@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import ReactECharts from "echarts-for-react";
 import styles from "./GraphComponent.module.css";
 
 interface ZoomControlsProps {
-  chartRef: React.RefObject<any>;
+  chartRef: React.RefObject<ReactECharts | null>;
 }
 
 export const GraphZoomControls = React.memo<ZoomControlsProps>(
@@ -44,9 +45,14 @@ export const GraphZoomControls = React.memo<ZoomControlsProps>(
     useEffect(() => {
       const chart = chartRef.current?.getEchartsInstance();
 
+      if (!chart) return;
+
       chart.on("graphRoam", () => {
-        const zoom = chart.getOption().series?.[0]?.zoom;
-        const newSlider = sliderFromZoom(zoom);
+        const option = chart.getOption() as {
+          series?: Array<{ zoom?: number }>;
+        };
+        const zoom = option.series?.[0]?.zoom;
+        const newSlider = sliderFromZoom(zoom ?? 1);
         setSliderValue(newSlider);
       });
 
